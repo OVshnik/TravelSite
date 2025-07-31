@@ -1,0 +1,26 @@
+﻿@using TravelSite.Models.Roles
+@{
+	ViewData["Title"] = "RolePage";
+}
+@model RoleViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+
+<div class="card mb-1">
+	<div>
+		<span class="fw-bold mb-1">@Model.Name</span>
+	</div>
+</div>
+<div class="d-inline-flex">
+	<form method="post" asp-area="" asp-controller="Role" asp-route-id="@Model.Id" asp-action="EditRole">
+		<button class="btn btn-primary m-1" type="submit">
+			Редактировать
+		</button>
+	</form>
+	<form method=post asp-area="" asp-controller="Role" asp-route-id="@Model.Id" asp-action="DeleteRole">
+		<button class="btn btn-primary m-1" type="submit">
+			Удалить
+		</button>
+	</form>
+</div>

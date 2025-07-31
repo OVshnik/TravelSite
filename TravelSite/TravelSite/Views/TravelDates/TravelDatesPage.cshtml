@@ -1,0 +1,30 @@
+﻿@using TravelSite.Models.TravelDates
+@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "TravelDatesPage";
+}
+@model TravelDatesViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+<div class="mb-5">
+	<div class="card mb-1">
+		<label class="fw-bold fs-5"> @Model.Travel?.Name</label>
+		<div style="color:darkgray; align-content:start">Дата начала: @Model.From</div>
+		<div style="color:darkgray; align-content:start">Дата окончания: @Model.To</div>
+		<div style="color:darkgray; align-content:start">Количество свободных мест: @Model.AvailablePlaces</div>
+		<div style="color:darkgray; align-content:start">Максимальное количество мест:@Model.MaxPlaces</div>
+		<div style="color:darkgray; align-content:start">Количество дней: @Model.DaysCount</div>
+		<div style="color:darkgray; align-content:start">Стоимость: @Model.Price р</div>
+	</div>
+	<form method="post" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="TravelDates" asp-action="EditTravelDates">
+		<input asp-for="Id" hidden />
+		<button class="btn btn-primary m-1" type="submit">
+			Редактировать
+		</button>
+	</form>
+</div>

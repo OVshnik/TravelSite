@@ -1,0 +1,33 @@
+﻿@using TravelSite.Models.Bookings
+@using TravelSite.Models.Orders
+@{
+	ViewData["Title"] = "AddOrder";
+}
+@model CreateOrderViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<form class="frm" method="post" asp-controller="Order" asp-action="AddOrder">
+	<div asp-validation-summary="ModelOnly"></div>
+	<input asp-for="@Model.BookingId" hidden>
+	<div class="border-bottom mb-1">
+		<div class="mb-3">
+			<label class="fs-5 mb-1 fw-bolder">Номер бронирования: @Model.BookingId</label>
+		</div>
+		<div class="mb-3">
+			<label class="fs-5 mb-1 fw-bolder">Название тура: @Model.Travel?.Name</label>
+		</div>
+		<div class="mb-3">
+			<label class="fs-5 mb-1 fw-bolder">Дата формирования: @Model.CreateDate</label>
+		</div>
+		<div class="mb-3">
+			<label class="fs-5 mb-1 fw-bolder">Стоимость: @Model.TotalPrice</label>
+		</div>
+		<div>
+			<input class="btn btn-primary" type="submit" value="Оплатить" />
+		</div>
+	</div>
+</form>

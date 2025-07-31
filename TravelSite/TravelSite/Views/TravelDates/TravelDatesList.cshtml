@@ -1,0 +1,56 @@
+﻿@using TravelSite.Models.TravelDates
+@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "TravelDatesList";
+}
+@model List<TravelDatesViewModel>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if (Model.Count != 0)
+{
+	<div class="mb-5">
+		<label class="fw-bold fs-5">Все возможные даты для туров</label>
+		@foreach (var group in Model.GroupBy(x => x.Travel?.Name))
+		{
+			<div class="card mb-1 w-50">
+				<div class="badge bg-warning text-light mb-1">@group.Key</div>
+				@foreach (var date in group)
+				{
+					<div class="card mb-1 w-auto">
+						<a class="text-decoration-none" method=get asp-area="" asp-controller="TravelDates" asp-route-id="@date.Id" asp-action="GetTravelDates">
+							<span style="color:black;align-content:start">@date.Id</span>
+						</a>
+						<div style="color:darkgray; align-content:start">Дата начала: @date.From</div>
+						<div style="color:darkgray; align-content:start">Дата окончания: @date.To</div>
+						<div style="color:darkgray; align-content:start">Количество свободных мест: @date.AvailablePlaces</div>
+						<div class="d-inline-block">
+						<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="EditTravelDates">
+							<input asp-for="@date.Id" hidden />
+							<button class="btn btn-primary" type="submit">
+								Редактировать
+							</button>
+						</form>
+						<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="DeleteTravelDates">
+							<input asp-for="@date.Id" hidden />
+							<button class="btn btn-primary" type="submit">
+								Удалить
+							</button>
+						</form>
+						</div>
+					</div>
+				}
+			</div>
+		}
+	</div>
+}
+else
+{
+	<div>
+		<label class="fs-5">Дат для туров пока нет</label>
+	</div>
+	<a class="" method=get asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Перейти к списку туров</a>
+}

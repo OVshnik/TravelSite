@@ -1,0 +1,44 @@
+﻿@using TravelSite.Models.Orders
+@{
+	ViewData["Title"] = "OrderPage";
+}
+@model OrderViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+<div class="border-bottom mb-1">
+
+	<div>
+		<label class="card-text fst-italic">Номер: @Model.Id</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Описание: @Model.Description</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Статус: @Model.Status</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Дата формирования:@Model.CreateDate</label>
+	</div>
+</div>
+@if (User.IsInRole("Admin"))
+{
+	<div class="d-inline-block">
+		<form method="get" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Order" asp-action="EditOrder">
+			<input asp-for="Id" hidden />
+			<button class="btn btn-primary m-1" type="submit">
+				Редактировать
+			</button>
+		</form>
+		<form method=post class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Order" asp-action="DeleteOrder">
+			<input asp-for="Id" hidden />
+			<button class="btn btn-primary m-1" type="submit">
+				Удалить
+			</button>
+		</form>
+	</div>
+}

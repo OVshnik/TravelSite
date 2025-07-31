@@ -1,0 +1,40 @@
+﻿@using TravelSite.Data.Models
+@using Microsoft.AspNetCore.Identity;
+@using TravelSite.Models.Account
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager;
+
+@model HomeViewModel;
+@{
+	ViewData["Title"] = "Home Page";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/site.css">
+
+@if (SignInManager.IsSignedIn(User))
+{
+	if (Model.Travels is not null)
+	{
+
+		<div style="width: 90%;margin: 2rem auto;">
+			<div class="gallery">
+				@for(int i=0;i<Model.Travels.Count;i++)
+				{
+					<figure class="gallery__item gallery__item--@(i+1)">
+						<a class="" method=get asp-area="" asp-controller="Travel" asp-route-id="@Model.Travels[i].Id" asp-action="GetTravel">
+							<img class="gallery__img" src="@Model.Travels[i].Photo" alt="Gallery image @(i+1)" />
+						</a>
+					</figure>
+				}
+			</div>
+		</div>
+	}
+}
+else
+{
+	<div class="">
+		<partial name="Login" model="Model.LoginViewModel" />
+	</div>
+}

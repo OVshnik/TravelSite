@@ -1,0 +1,72 @@
+﻿@using TravelSite.Data.Models
+@using TravelSite.Models.Account
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@{
+	ViewData["Title"] = "UserPage";
+}
+@model UserViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+
+<label class="fs-5">Информация о пользователе</label>
+@if (UserManager.GetUserId(User) == Model.User.Id || User.IsInRole("Admin"))
+{
+	<div class="card mb-1">
+		<div class="card-body">
+			<div class="border-bottom mb-1">
+				<label class="card-text">ФИО: @Model.User.GetFullName()</label>
+			</div>
+			<div class="border-bottom  mb-1">
+				<label class="card-text">email: @Model.User.Email</label>
+			</div>
+			<div class="border-bottom  mb-1">
+				<label class="card-text">Дата рождения: @Model.User.BirthDate.ToShortDateString()</label>
+			</div>
+
+			@if (Model.Bookings.Count != 0)
+			{
+				<div class="d-inline-flex border-bottom">
+					Роли:
+					@foreach (var book in Model.Bookings)
+					{
+
+						<span class="badge bg-warning text-light m-1">@book</span>
+
+					}
+				</div>
+			}
+			@if (Model.Orders.Count != 0)
+			{
+				<div class="d-inline-flex border-bottom">
+					Роли:
+					@foreach (var book in Model.Bookings)
+					{
+
+						<span class="badge bg-warning text-light m-1">@book</span>
+
+					}
+				</div>
+			}
+		</div>
+	</div>
+	@if (User.IsInRole("Admin") )
+	{
+		<div class="d-inline-flex m-1">
+			<form asp-controller="Account" asp-action="AdminEditUser" asp-route-id="@Model.User.Id" method="post">
+				<button type="submit" class="btn btn-primary m-1">
+					Редактировать
+				</button>
+			</form>
+			@if (UserManager.GetUserId(User) != Model.User.Id)
+			{
+				<form asp-controller="Account" asp-action="DeleteUser" asp-route-id="@Model.User.Id" method="post">
+					<button type="submit" class="btn btn-primary m-1">
+						Удалить
+					</button>
+				</form>
+			}
+		</div>
+	}
+}

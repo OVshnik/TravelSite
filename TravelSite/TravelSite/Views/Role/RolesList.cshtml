@@ -1,0 +1,36 @@
+﻿@using TravelSite.Models.Roles
+@{
+	ViewData["Title"] = "RolesList";
+}
+@model List<RoleViewModel>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+
+
+@if (Model.Count != 0)
+{
+	 <div class="mb-5">
+		<label class="fw-bold fs-5">Все роли</label>
+		<div>
+			<a class="" method=get asp-area="" asp-controller="Role" asp-action="CreateRole">Добавить роль</a>
+		</div>
+		@foreach (var role in Model)
+		{
+			<div class="card mb-1">
+			<a class="text-decoration-none" method=get asp-area="" asp-controller="Role" asp-route-id="@role.Id" asp-action="GetRole">
+				<span class="badge bg-warning text-light mb-1">@role.Name</span>
+				</a>
+			</div>
+		}
+	</div>
+}
+else
+{
+	<label class="fs-5">Ролей пока нет</label>
+	<a class="" method=get asp-area="" asp-controller="Role" asp-action="CreateRole">Добавить роль</a>
+}
+
+
+
+

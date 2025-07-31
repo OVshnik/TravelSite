@@ -1,0 +1,147 @@
+﻿@using TravelSite.Models.Account
+@{
+	ViewData["Title"] = "Register";
+}
+@model RegisterViewModel
+
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
+<label class="fs-5 mb-1">Регистрация нового пользователя</label>
+
+@if (User.IsInRole("Admin"))
+{
+	<form class="frm" method="post" asp-controller="Account" asp-action="AdminRegister">
+		<div asp-validation-summary="ModelOnly" />
+@* 		<p class="form-check-inline">
+			@if (Model is not null)
+			{
+				@if (Model.Roles.Count != 0)
+				{
+					@for (int i = 0; i < Model.Roles.Count; i++)
+					{
+						<td>
+							@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class = "form-check-input m-1" })
+							<lable class="tag-margin">@Model.Roles[i].Name</lable>
+							@Html.HiddenFor(model => model.Roles[i].Id)
+							@Html.HiddenFor(model => model.Roles[i].Name)
+						</td>
+					}
+				}
+			}
+		</p> *@
+		<div>
+			<div class="mb-3">
+				<input asp-for="FirstName" class="form-control" />
+				<span asp-validation-for="FirstName" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="LastName" class="form-control" />
+				<span asp-validation-for="LastName" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="EmailReg" class="form-control" />
+				<span asp-validation-for="EmailReg" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="PasswordReg" class="form-control" />
+				<span asp-validation-for="PasswordReg" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="PasswordConfirm" class="form-control" />
+				<span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+			</div>
+		</div>
+		<label for="inputDate" class="form-label">Дата рождения</label>
+		<div class="mb-3">
+			<input asp-for="BirthDate" class="form-control" type="date" class="form-control" id="date" style="max-width:fit-content" onekeydown="event.preventDefault()" />
+			<span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon">
+				</span>
+			</span>
+			<span asp-validation-for="BirthDate" class="text-danger"></span>
+		</div>
+		<div>
+			<input class="btn btn-primary" type="submit" value="Зарегистрироваться" />
+		</div>
+	</form>
+}
+else
+{
+	<form class="frm" method="post" asp-controller="Account" asp-action="Register">
+		<div asp-validation-summary="ModelOnly" />
+		<div>
+			<div class="mb-3">
+				<input asp-for="FirstName" class="form-control" />
+				<span asp-validation-for="FirstName" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="LastName" class="form-control" />
+				<span asp-validation-for="LastName" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="EmailReg" class="form-control" />
+				<span asp-validation-for="EmailReg" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="PasswordReg" class="form-control" />
+				<span asp-validation-for="PasswordReg" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class="mb-3">
+				<input asp-for="PasswordConfirm" class="form-control" />
+				<span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+			</div>
+		</div>
+		<label for="inputDate" class="form-label">Дата рождения</label>
+		<div class="mb-3">
+			<input asp-for="BirthDate" class="form-control" type="text" class="form-control" id="date" onekeydown="event.preventDefault()" />
+			<span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon">
+				</span>
+			</span>
+			<span asp-validation-for="BirthDate" class="text-danger"></span>
+		</div>
+		<div>
+			<input class="btn btn-primary" type="submit" value="Зарегистрироваться" />
+		</div>
+	</form>
+}
+<script>
+	$(function () {
+
+		$(function () {
+			let maxDay = new Date().getDate();
+			let maxMonth = new Date().getMonth() + 1;
+			let maxYear = new Date().getFullYear();
+			let fullDate = `${maxYear}/${maxMonth}/${maxDay}`;
+			$('#date').datetimepicker({
+				locale: 'ru',
+				stepping: 10,
+				format: 'DD.MM.YYYY',
+				maxDate: fullDate,
+			});
+		});
+	});
+</script>

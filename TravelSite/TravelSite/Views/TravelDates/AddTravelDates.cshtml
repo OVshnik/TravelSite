@@ -1,0 +1,89 @@
+﻿@using TravelSite.Models.TravelDates
+@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "AddTravelDates";
+}
+@model CreateTravelDatesViewModel
+
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
+<label class="fs-5">Добавление дат для тура @Model.Travel.Name</label>
+<form class="frm" method="post" asp-controller="TravelDates" asp-action="AddTravelDatesInDB">
+	<div asp-validation-summary="ModelOnly"></div>
+	<div>
+		<div class="mb-3">
+			<label class="fs-7">Стоимость тура</label>
+			<input asp-for="Price" class="form-control"/>
+			<span asp-validation-for="Price" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<div class="mb-3">
+			<label class="fs-7">Максимальное количество мест</label>
+			<input asp-for="MaxPlaces" class="form-control" />
+			<span asp-validation-for="MaxPlaces" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<div class="mb-3">
+			<label class="fs-7">Доступное количество мест</label>
+			<input asp-for="AvailablePlaces" class="form-control" />
+			<span asp-validation-for="AvailablePlaces" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<div class="mb-3">
+			<label class="fs-7">Дата начала</label>
+			<input asp-for="From" class="form-control" type="date" class="form-control" id="date" onekeydown="event.preventDefault()" />
+			<span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon">
+				</span>
+			</span>
+			<span asp-validation-for="From" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<div class="mb-3">
+			<label class="fs-7">Дата окончания</label>
+			<input asp-for="To" class="form-control" type="date" class="form-control" id="date" onekeydown="event.preventDefault()" />
+			<span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon">
+				</span>
+			</span>
+			<span asp-validation-for="To" class="text-danger"></span>
+		</div>
+	</div>
+	<input asp-for="@Model.Travel.Id" hidden />
+	<div>
+		<input class="btn btn-primary" type="submit" value="Добавить" />
+	</div>
+</form>
+<div>
+	<label for="exampleInputPassword1" class="form-label">
+		<a class="" asp-area="" asp-controller="TravelDates" asp-action="GetAllTravelDates">Перейти к списку всех дат туров</a>
+	</label>
+</div>
+<script>
+	$(function () {
+
+		$(function () {
+			let maxDay = new Date().getDate();
+			let maxMonth = new Date().getMonth() + 1;
+			let maxYear = new Date().getFullYear();
+			let fullDate = `${maxYear}/${maxMonth}/${maxDay}`;
+			$('#date').datetimepicker({
+				locale: 'ru',
+				stepping: 10,
+				format: 'DD.MM.YYYY',
+				maxDate: fullDate,
+			});
+		});
+	});
+</script>

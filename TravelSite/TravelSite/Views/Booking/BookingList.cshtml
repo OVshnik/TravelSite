@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelSite.Data.Models
+@using TravelSite.Models.Bookings
+@inject UserManager<User> userManager;
+@{
+	ViewData["Title"] = "BookingList";
+}
+@model List<BookingViewModel>
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if (Model.Count != 0)
+{
+	@if (User.IsInRole("Admin"))
+	{
+		<div class="mb-5">
+			<label class="fw-bold fs-5">Все бронирования</label>
+			@foreach (var booking in Model)
+			{
+				<div class="card mb-1">
+					<a class="text-decoration-none" method=get asp-area="" asp-controller="Booking" asp-route-id="@booking.Id" asp-action="GetBooking">
+						<span class="badge bg-warning text-light mb-1">@booking.Id</span>
+					</a>
+					<div style="color:darkgray; align-content:start">@booking.User?.UserName</div>
+					<div style="color:darkgray; align-content:start">@booking.Travel?.Name</div>
+					<div style="color:darkgray; align-content:start">@booking.BookDate</div>
+					<div style="color:darkgray; align-content:start">@booking.BookingStatus</div>
+					<div style="color:darkgray; align-content:start">@booking.From</div>
+					<div style="color:darkgray; align-content:start">@booking.To</div>
+				</div>
+				<a class="" method=get asp-area="" asp-controller="Booking" asp-route-id="@booking.Id" asp-action="EditBooking">Редактировать</a>
+			}
+		</div>
+	}
+	else
+	{
+		var bookings = Model.Where(x => x.User?.Id == userManager.GetUserId(User)).ToList();
+		if (bookings.Count != 0)
+		{
+			<div class="mb-5">
+				<label class="fw-bold fs-5">Все заказы</label>
+				@foreach (var booking in Model.Where(x => x.User?.Id == userManager.GetUserId(User)).ToList())
+				{
+					<div class="card mb-1">
+						<a class="text-decoration-none" method=get asp-area="" asp-controller="Travel" asp-route-id="@booking.Id" asp-action="GetTravel">
+							<span class="badge bg-warning text-light mb-1">@booking.Id</span>
+						</a>
+						<div style="color:darkgray; align-content:start">@booking.?User.UserName</div>
+						<div style="color:darkgray; align-content:start">@booking.?Travel.Name</div>
+						<div style="color:darkgray; align-content:start">@booking.BookDate</div>
+						<div style="color:darkgray; align-content:start">@booking.BookingStatus</div>
+						<div style="color:darkgray; align-content:start">@booking.From</div>
+						<div style="color:darkgray; align-content:start">@booking.To</div>
+					</div>
+					<a class="" method=get asp-area="" asp-controller="Booking" asp-route-id="@booking.Id" asp-action="EditBooking">Редактировать</a>
+				}
+			</div>
+		}
+		else
+		{
+			<label class="fs-5">Бронирований пока нет</label>
+		}
+	}
+}
+else
+{
+	<label class="fs-5">Бронирований пока нет</label>
+}
+
+

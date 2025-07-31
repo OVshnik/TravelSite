@@ -1,0 +1,39 @@
+﻿@using TravelSite.Models.Account
+@model LoginViewModel
+
+@{
+	ViewData["Title"] = "Login";
+}
+<div>
+	<form method="post" asp-controller="Account" asp-action="Login">
+		<div asp-validation-summary="ModelOnly"></div>
+		<div>
+			<label for="exampleInputEmail1" class="form-label">Адрес электронной почты</label>
+			<div class="form-label">
+				<input asp-for="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<div class=mb-3>
+				<label for="exampleInputPassword1" class="form-label">Пароль</label>
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+		</div>
+		<div>
+			<label for="exampleInputPassword1" class="form-label">
+				Еще нет аккаунта?
+				<a method="get" asp-area="" asp-controller="Account" asp-action="Register">Зарегистрируйтесь</a>
+			</label>
+		</div>
+		<div>
+			<input class="btn btn-primary" type="submit" value="Войти" />
+		</div>
+	</form>
+</div>
+@section scripts {
+
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,0 +1,66 @@
+﻿@using TravelSite.Models.Bookings
+@{
+	ViewData["Title"] = "AddBooking";
+}
+@model CreateBookingViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<form class="frm" method="post" asp-controller="Booking" asp-action="AddBooking">
+	<div asp-validation-summary="ModelOnly"></div>
+	<div class="border-bottom mb-1">
+		<div class="mb-3">
+			<label class="fs-5 mb-1 fw-bolder">@Model.Travel?.Name</label>
+		</div>
+		<div style="align-content:start; margin-bottom:5px">
+			<img style="align-content:center; border-radius:5px" src="@Model.Travel?.Photo" width="350" height="200" />
+		</div>
+		<p class="form-check-inline">
+			@if (Model.TravelDates.Count>0)
+			{
+				@for (int i = 0; i < Model.TravelDates.Count; i++)
+				{
+					<div class="card mb-1 w-25">
+						<div class="card-body">
+							@Html.CheckBoxFor(model => Model.TravelDates[i].isChecked, new { @class = "form-check-input" })
+							<lable class="tag-margin">C: @Model.TravelDates[i].From</lable>
+							<lable class="tag-margin">До: @Model.TravelDates[i].To</lable>
+							<div>
+								<lable class="tag-margin">Количество свободных мест: @Model.TravelDates[i].AvailablePlaces</lable>
+							</div>
+							<div>
+								<lable class="tag-margin">Количество дней: @Model.TravelDates[i].DaysCount</lable>
+							</div>
+							<div>
+								<lable class="tag-margin">Стоимость: @Model.TravelDates[i].Price</lable>
+							</div>
+							@Html.HiddenFor(model => @Model.TravelDates[i].Id)
+							@Html.HiddenFor(model => @Model.TravelDates[i].From)
+							@Html.HiddenFor(model => @Model.TravelDates[i].To)
+							@Html.HiddenFor(model => @Model.TravelDates[i].AvailablePlaces)
+							@Html.HiddenFor(model => @Model.TravelDates[i].DaysCount)
+							@Html.HiddenFor(model => @Model.TravelDates[i].MaxPlaces)
+							@Html.HiddenFor(model => @Model.TravelDates[i].Price)
+							@Html.HiddenFor(model => @Model.TravelDates[i].TravelId)
+						</div>
+					</div>
+				}
+				<span asp-validation-for="TravelDates" class="text-danger"></span>
+			}
+		</p>
+		<input asp-for="@Model.BookDate" hidden>
+		<input asp-for="@Model.BookingStatus" hidden>
+		<input asp-for="@Model.Price" hidden>
+		<input asp-for="@Model.Travel.Id" hidden>
+		<input asp-for="@Model.UserId" hidden>
+		<div>
+			<input class="btn btn-primary" type="submit" value="Подтвердить бронирование" />
+		</div>
+	</div>
+</form>
+
+
+

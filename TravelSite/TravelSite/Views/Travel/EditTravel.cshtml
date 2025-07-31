@@ -1,0 +1,51 @@
+﻿@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "EditTravel";
+}
+@model EditTravelViewModel
+
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+
+<label class="fs-5 mb-1">Редактирование тура</label>
+
+<form class="frm" method="post" asp-controller="Travel" asp-action="UpdateTravel">
+	<div asp-validation-summary="ModelOnly"></div>
+	<div>
+		<div class="mb-3">
+			<input asp-for="Id" class="form-control" hidden />
+		</div>
+		<div class="mb-3">
+			<label class="fs-7 ">Категория</label>
+			<input asp-for="Category" class="form-control" />
+			<span asp-validation-for="Category" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="fs-7">Название</label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="fs-7">Описание</label>
+			<input asp-for="Description" class="form-control" />
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="fs-7">Ссылка на фото</label>
+			<input asp-for="Photo" class="form-control">
+			<span asp-validation-for="Photo" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="fs-7">Ссылка на видео</label>
+			<input asp-for="Video" class="form-control">
+			<span asp-validation-for="Video" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<input class="btn btn-primary" type="submit" value="Сохранить" />
+	</div>
+</form>

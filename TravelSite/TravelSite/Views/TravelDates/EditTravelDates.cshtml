@@ -1,0 +1,56 @@
+﻿@using TravelSite.Models.TravelDates
+@{
+	ViewData["Title"] = "EditTravelDates";
+}
+@model EditTravelDatesViewModel
+
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+
+<label class="fs-5 mb-1">Редактирование дат тура</label>
+
+<form class="frm" method="post" asp-controller="TravelDates" asp-action="UpdateTravelDates">
+	<div asp-validation-summary="ModelOnly"></div>
+	<div>
+		<div class="mb-3">
+			<input asp-for="Id" class="form-control" hidden />
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Дата отправления</label>
+			<input asp-for="From" class="form-control" style="max-width:fit-content" type="date" />
+			<span asp-validation-for="From" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Дата возвращения</label>
+			<input asp-for="To" class="form-control" style="max-width:fit-content" type="date" />
+			<span asp-validation-for="To" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Количество дней</label>
+			<input asp-for="DaysCount" class="form-control" />
+			<span asp-validation-for="DaysCount" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Количество свободных мест</label>
+			<input asp-for="AvailablePlaces" class="form-control">
+			<span asp-validation-for="AvailablePlaces" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Максимальное количество мест</label>
+			<input asp-for="MaxPlaces" class="form-control">
+			<span asp-validation-for="MaxPlaces" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Цена</label>
+			<input asp-for="Price" class="form-control">
+			<span asp-validation-for="Price" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<input class="btn btn-primary" type="submit" value="Сохранить" />
+	</div>
+</form>

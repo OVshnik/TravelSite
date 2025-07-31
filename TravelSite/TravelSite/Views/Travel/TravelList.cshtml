@@ -1,0 +1,58 @@
+﻿@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "TravelList";
+}
+@model List<TravelViewModel>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if (Model.Count != 0)
+{
+	<div class="mb-5">
+		<label class="fw-bold fs-5">Все туры</label>
+		@if (User.IsInRole("Admin"))
+		{
+			<div>
+				<a class="" method=get asp-area="" asp-controller="Travel" asp-action="AddTravel">Добавить тур</a>
+			</div>
+		}
+		@foreach (var travel in Model)
+		{
+			<div class="mb-1">
+				<a class="text-decoration-none" method=get asp-area="" asp-controller="Travel" asp-route-id="@travel.Id" asp-action="GetTravel">
+					<span class="badge bg-warning text-light mb-1">@travel.Name</span>
+				</a>
+				<div style="color:darkgray; align-content:start">@travel.Description</div>
+				<a class="text-decoration-none;color:darkgray; align-content:start" method=get asp-area="" asp-controller="Travel" asp-route-id="@travel.Id" asp-action="GetTravel">
+					<img style="align-content:center; border-radius:5px" src="@travel.Photo" width="280" height="150" />
+				</a>
+			</div>
+			@if (User.IsInRole("Admin"))
+			{
+				<form method="post" class="d-inline" asp-area="" asp-route-id="@travel.Id" asp-controller="Travel" asp-action="EditTravel">
+					<input asp-for="@travel.Id" hidden />
+					<button class="btn btn-primary m-1" type="submit">
+						Редактировать
+					</button>
+				</form>
+				<form method="post" class="d-inline" asp-area="" asp-route-id="@travel.Id" asp-controller="TravelDates" asp-action="AddTravelDates">
+					<input asp-for="@travel.Id" hidden />
+					<button class="btn btn-primary m-1" type="submit">
+						Добавить даты
+					</button>
+				</form>
+			}
+		}
+	</div>
+}
+else
+{
+	<label class="fs-5">Туров пока нет</label>
+	@if (User.IsInRole("Admin"))
+	{
+		<a class="" method=get asp-area="" asp-controller="Travel" asp-action="AddTravel">Добавить тур</a>
+	}
+}

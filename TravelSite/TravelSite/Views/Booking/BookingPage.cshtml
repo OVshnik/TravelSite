@@ -1,0 +1,49 @@
+﻿@using TravelSite.Models.Bookings
+@{
+	ViewData["Title"] = "BookingPage";
+}
+@model BookingViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+	<div class="border-bottom mb-1">
+		<div>
+			<label class="card-text fst-italic">Тур: @Model.Travel?.Name</label>
+		</div>
+		<div>
+			<label class="card-text fst-italic">Пользователь: @Model.User?.UserName</label>
+		</div>
+		<div>
+			<label class="card-text fst-italic">Дата начала: @Model.From</label>
+		</div>
+		<div>
+			<label class="card-text fst-italic">Дата окончания: @Model.To</label>
+		</div>
+		<div>
+			<label class="card-text fst-italic">Стоимость: @Model.Price</label>
+		</div>
+		<div>
+		<label class="card-text fst-italic">Дата бронирования: @Model.BookDate</label>
+		</div>
+	</div>
+@if (User.IsInRole("Admin"))
+{
+	<div class="d-inline-block">
+		<form method="get" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Booking" asp-action="EditBooking">
+			<input asp-for="Id" hidden />
+			<button class="btn btn-primary m-1" type="submit">
+				Редактировать
+			</button>
+		</form>
+		<form method=post class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Booking" asp-action="DeleteBooking">
+			<input asp-for="Id" hidden />
+			<button class="btn btn-primary m-1" type="submit">
+				Удалить
+			</button>
+		</form>
+	</div>
+}

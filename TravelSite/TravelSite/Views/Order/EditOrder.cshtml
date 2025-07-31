@@ -1,0 +1,42 @@
+﻿@using TravelSite.Models.Orders
+@{
+	ViewData["Title"] = "EditOrder";
+}
+@model EditOrderViewModel
+
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+
+<label class="fs-5 mb-1">Редактирование заказа</label>
+
+<form class="frm" method="post" asp-controller="Order" asp-action="UpdateOrder">
+	<div asp-validation-summary="ModelOnly"></div>
+	<div>
+		<div class="mb-3">
+			<input asp-for="Id" class="form-control" hidden />
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Описание</label>
+			<input asp-for="Description" class="form-control" style="max-width:fit-content" />
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Дата формирования</label>
+			<input asp-for="CreateDate" class="form-control" style="max-width:fit-content" type="date" />
+			<span asp-validation-for="CreateDate" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="text-dark-emphasis">Статус</label>
+			<input asp-for="Status" class="form-control" style="max-width:fit-content" />
+			<span asp-validation-for="Status" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<input class="btn btn-primary" type="submit" value="Сохранить" />
+	</div>
+</form>
+

@@ -1,0 +1,80 @@
+﻿@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "TravelPage";
+}
+@model TravelViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+
+<div class="mb-1 justify-content-center" style="display:grid; justify-self:center">
+	<div>
+		<label class="fs-5 mb-1 fw-bolder" style="display:grid; justify-self:center">@Model.Name</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic" style="display:grid; justify-self:center">@Model.Category</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic" style="display:grid; justify-self:center">@Model.Description</label>
+	</div>
+	@if (Model.PhotoGallery.Count > 0)
+	{
+		<div class="swiper" style="border-radius:20px; width:800px;height:auto; align-items:center">
+			<div class="swiper-wrapper" style="border-radius:10px;">
+				@foreach (var photo in Model.PhotoGallery)
+				{
+					<div class="swiper-slide align-content-center align-self-center">
+						<img src=@photo.Name width="800px" height="auto">
+					</div>
+				}
+			</div>
+			<div class="swiper-pagination" style="color:#7c858f"></div>
+			<div class="swiper-button-next" style="color:#7c858f"></div>
+			<div class="swiper-button-prev" style="color:#7c858f"></div>
+		</div>
+	}
+	@if (!String.IsNullOrEmpty(Model.Video))
+	{
+		<iframe src="@Model.Video" style="display:grid; justify-self:center; border-radius:20px; aspect-ratio: 16/9; width: 800px; height:auto"
+				allow="autoplay; fullscreen; accelerometer; gyroscope; picture-in-picture; encrypted-media"
+				data-testid="embed-iframe" frameborder="0" scrolling="no" allowfullscreen></iframe>
+	}
+	<div style="display:inline-block; justify-self:center">
+		@if (User.IsInRole("Admin"))
+		{
+
+			<form method="post" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Travel" asp-action="EditTravel">
+				<input asp-for="Id" hidden />
+				<button class="btn btn-primary m-1" type="submit">
+					Редактировать
+				</button>
+			</form>
+			<form method=post class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Travel" asp-action="DeleteTravel">
+				<input asp-for="Id" hidden />
+				<button class="btn btn-primary m-1" type="submit">
+					Удалить
+				</button>
+			</form>
+
+		}
+		<form method="post" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Booking" asp-action="PrepareAddBooking">
+			<input asp-for="Id" hidden />
+			<button class="btn btn-primary m-1" type="submit">
+				Забронировать
+			</button>
+		</form>
+	</div>
+</div>
+
+<script>
+	new Swiper('.swiper', {
+		navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+		pagination: { el: ".swiper-pagination", },
+		loop: true
+	});
+</script>

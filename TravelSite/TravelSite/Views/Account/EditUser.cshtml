@@ -1,0 +1,112 @@
+﻿@using TravelSite.Data.Models
+@using TravelSite.Models.Account
+@{
+	ViewData["Title"] = "EditUser";
+}
+@model UserEditViewModel
+
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
+
+
+
+<label class="fs-5 mb-1">Редактирование пользователя</label>
+
+<form class="frm" method="post" asp-controller="Account" asp-action="UpdateUser">
+	<div asp-validation-summary="ModelOnly"></div>
+	@if (Model is not null)
+	{
+		@for (int i = 0; i < Model.Roles.Count; i++)
+		{
+			@if (User.IsInRole("Admin") || User.IsInRole("UberAdmin"))
+			{
+				<p class="form-check-inline">
+
+					@if (Model.Roles[i].Name != "User")
+					{
+						<td>
+							@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new
+								{
+									@class = "form-check-input m-1",
+									@id = $"{Model.Roles[i].Id}"
+								})
+							<lable class="tag-margin">@Model.Roles[i].Name</lable>
+							@Html.HiddenFor(model => model.Roles[i].Id)
+							@Html.HiddenFor(model => model.Roles[i].Name)
+						</td>
+					}
+					else
+					{
+						@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class = "form-check-input m-1", @checked = "checked", @disabled = "disabled" })
+						<lable for="user" class="tag-margin">@Model.Roles[i].Name</lable>
+						@Html.HiddenFor(model => model.Roles[i].Id)
+						@Html.HiddenFor(model => model.Roles[i].Name)
+						
+					}
+				</p>
+			}
+
+		}
+	}
+	<div>
+		<div class="mb-3">
+			<input asp-for="UserId" class="form-control" hidden />
+		</div>
+		<div class="mb-3">
+			<input asp-for="FirstName" class="form-control" />
+			<span asp-validation-for="FirstName" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<input asp-for="LastName" class="form-control" />
+			<span asp-validation-for="LastName" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<input asp-for="MiddleName" class="form-control" />
+			<span asp-validation-for="MiddleName" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<input asp-for="BirthDate" class="form-control" type="date" class="form-control" id="date" style="max-width:fit-content" onekeydown="event.preventDefault()" />
+			<span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon">
+				</span>
+			</span>
+			<span asp-validation-for="BirthDate" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<input asp-for="Email" class="form-control">
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<input asp-for="Password" class="form-control">
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+	</div>
+	<div>
+		<input class="btn btn-primary" type="submit" value="Сохранить" />
+	</div>
+</form>
+<script>
+	$(function () {
+
+		$(function () {
+			let maxDay = new Date().getDate();
+			let maxMonth = new Date().getMonth() + 1;
+			let maxYear = new Date().getFullYear();
+			let fullDate = `${maxYear}/${maxMonth}/${maxDay}`;
+			$('#date').datetimepicker({
+				locale: 'ru',
+				stepping: 10,
+				format: 'DD.MM.YYYY',
+				maxDate: fullDate,
+			});
+		});
+	});
+</script>

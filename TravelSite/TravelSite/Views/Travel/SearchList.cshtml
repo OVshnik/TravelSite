@@ -1,0 +1,34 @@
+﻿@using TravelSite.Models.Travels
+@{
+	ViewData["Title"] = "SearchList";
+}
+@model List<TravelViewModel>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+@if (Model.Count != 0)
+{
+	
+	<div class="mb-5">
+		@foreach (var travel in Model)
+		{
+			<div class="mb-1">
+				<a class="text-decoration-none" method=get asp-area="" asp-controller="Travel" asp-route-id="@travel.Id" asp-action="GetTravel">
+					<span class="badge bg-warning text-light mb-1">@travel.Name</span>
+				</a>
+				<div style="color:darkgray; align-content:start">@travel.Description</div>
+				<a class="text-decoration-none;color:darkgray; align-content:start" method=get asp-area="" asp-controller="Travel" asp-route-id="@travel.Id" asp-action="GetTravel">
+					<img style="align-content:center; border-radius:5px" src="@travel.Photo" width="280" height="150" />
+				</a>
+			</div>
+		}
+	</div>
+}
+else
+{
+	<label class="fs-5">Туров с таким названием не найдено</label>
+}

@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - TravelSite</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/TravelSite.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+					<button type="submit" style="border: none; background: none;">
+						<img style="max-width:25px;max-height:25px; align-content:start" src="/logo.jpg" />
+					</button>Travels
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				@if (User.Identity.IsAuthenticated)
+				{
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Туры</a>
+							</li>
+
+							@if (User.IsInRole("Admin"))
+							{
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="GetAllUsers">Пользователи</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="TravelDates" asp-action="GetAllTravelDates">Даты туров</a>
+								</li>
+							}
+
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Help">Помощь</a>
+							</li>
+							<li>
+								@{
+									var search = "";
+								}
+								<form asp-area="" asp-action="SearchTravel" asp-controller="Travel" class="d-flex mx-5" method="post">
+									<input asp-for="@search" class="form-control me-2 " type="text" placeholder="Поиск" aria-label="Search">
+									<button class="btn btn-outline-success" type="submit">Поиск</button>
+								</form>
+							</li>
+						</ul>
+						<ul class="navbar-nav align-items-center">
+							<li class="nav-item">
+								<div class="dropdown">
+									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+										@User.Identity.Name
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+										<li>
+											<a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="MyPage">Профиль</a>
+										</li>
+										<li>
+											<a class="dropdown-item" asp-area="" asp-controller="Booking" asp-action="GetAllBooking">Бронирования</a>
+										</li>
+										<li>
+											<a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="GetAllOrders">Заказы</a>
+										</li>
+										<li>
+											<form asp-area="" asp-action="Logout" asp-controller="Account">
+												<button type="submit" class="dropdown-item">
+													Выход
+												</button>
+											</form>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+				}
+				else
+				{
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Туры</a>
+							</li>
+						</ul>
+					</div>
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Помощь</a>
+							</li>
+						</ul>
+					</div>
+				}
+			</div>
+		</nav>
+	</header>
+	<div class="container align-content-center">
+		<main role="main" class="pb-3 align-content-center align-self-center">
+			@RenderBody()
+		</main>
+	</div>
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2025 - TravelSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>
+	</footer>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

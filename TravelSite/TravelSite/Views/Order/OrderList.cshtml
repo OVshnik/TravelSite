@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelSite.Data.Models
+@using TravelSite.Models.Orders
+@{
+	ViewData["Title"] = "OrderList";
+}
+@model List<OrderViewModel>
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@if (User.IsInRole("Admin"))
+{
+	@if (Model.Count != 0)
+	{
+		<div class="mb-5">
+			<label class="fw-bold fs-5">Все заказы</label>
+			@foreach (var order in Model)
+			{
+				<div class="card mb-1">
+					<a class="text-decoration-none" method=get asp-area="" asp-controller="Order" asp-route-id="@order.Id" asp-action="GetOrder">
+						<span class="badge bg-warning text-light mb-1">@order.Id</span>
+					</a>
+					<div style="color:darkgray; align-content:start">@order.CreateDate</div>
+					<div style="color:darkgray; align-content:start">@order.Description</div>
+					<div style="color:darkgray; align-content:start">@order.Status</div>
+				</div>
+				@if (User.IsInRole("Admin"))
+				{
+					<a class="" method=get asp-area="" asp-controller="Order" asp-route-id="@order.Id" asp-action="EditOrder">Редактировать</a>
+				}
+			}
+		</div>
+	}
+	else
+	{
+		<label class="fs-5">Заказов пока нет</label>
+	}
+}
+
+
+
