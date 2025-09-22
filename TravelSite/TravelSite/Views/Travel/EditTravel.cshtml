@@ -1,19 +1,18 @@
 ﻿@using TravelSite.Models.Travels
+@using GleamTech.AspNet.Core
+@using GleamTech.FileUltimate.AspNet.UI
+@using static Azure.Core.HttpHeader
 @{
 	ViewData["Title"] = "EditTravel";
 }
 @model EditTravelViewModel
 
-<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 <link rel="stylesheet" href="css/bootstrap.css">
 
 <label class="fs-5 mb-1">Редактирование тура</label>
-
-<form class="frm" method="post" asp-controller="Travel" asp-action="UpdateTravel">
+<form class="form-check mb-5" method="post" asp-controller="Travel" asp-action="UpdateTravel" enctype="multipart/form-data">
 	<div asp-validation-summary="ModelOnly"></div>
 	<div>
 		<div class="mb-3">
@@ -21,31 +20,174 @@
 		</div>
 		<div class="mb-3">
 			<label class="fs-7 ">Категория</label>
-			<input asp-for="Category" class="form-control" />
+			<input asp-for="Category" class="form-control"/>
 			<span asp-validation-for="Category" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
 			<label class="fs-7">Название</label>
-			<input asp-for="Name" class="form-control" />
+			<input asp-for="Name" class="form-control"/>
 			<span asp-validation-for="Name" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
 			<label class="fs-7">Описание</label>
-			<input asp-for="Description" class="form-control" />
+			<textarea asp-for="Description" class="form-control"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
-		<div class="mb-3">
-			<label class="fs-7">Ссылка на фото</label>
-			<input asp-for="Photo" class="form-control">
-			<span asp-validation-for="Photo" class="text-danger"></span>
+		<div class="mb-3 w-75">
+			<div class="border-bottom mb-1">
+				<label class="fs-7">Основное фото</label>
+			</div>
+			<div class="">
+				<img style="align-content:center; border-radius:5px; margin-bottom:10px;" width="100%" height="auto" src="@Model.Photo" alt="Gallery image" />
+					<input asp-for="EditPhoto" type="file" class="form-control" data-val="true" style="display:flex; justify-content:center; width:auto" />
+					<span asp-validation-for="EditPhoto" style="display:flex; justify-content:center" class="text-danger fs-6"></span>
+			</div>
 		</div>
-		<div class="mb-3">
-			<label class="fs-7">Ссылка на видео</label>
-			<input asp-for="Video" class="form-control">
-			<span asp-validation-for="Video" class="text-danger"></span>
-		</div>
+		@if (Model.PhotoGallery.Count > 0)
+		{
+			<div class="border-bottom mb-1 text-center">
+				<label class="fs-7 ">Добавить/удалить фото</label>
+			</div>
+			<div style="width: 90%;margin: 2rem auto;">
+				<div class="gallery-light">
+					@for (int i = 0; i < Model.PhotoGallery.Count; i++)
+					{
+						<figure class="gallery__item gallery__item">
+							<img class="gallery__img" src="@Model.PhotoGallery[i].Name" alt="Gallery image" />
+							<div style="align-items:center; display:flex; justify-content:center">
+								@Html.CheckBoxFor(model => Model.PhotoGallery[i].IsChecked, new { @class = "form-check-input", id = $"p{@i}" })
+								<label class="form-check-label m-1">Удалить</label>
+							</div>
+							@Html.HiddenFor(model => @Model.PhotoGallery[i].Id)
+							@Html.HiddenFor(model => @Model.PhotoGallery[i].TravelId)
+							@Html.HiddenFor(model => @Model.PhotoGallery[i].Name)
+						</figure>
+					}
+					<div class="gallery__img" style="display: flex;
+							 align-items: center;
+							 justify-content: center;
+							 padding: 16px;
+							 font-size: 1.5rem;
+							 border: 2px dashed rgb(25, 203, 232);
+							 border-radius: 8px;">
+						<div>
+							<input asp-for="PhotoFiles" type="file" class="form-control" multiple data-val="true" style="display:flex; justify-content:center" />
+							<span asp-validation-for="PhotoFiles" style="display:flex; justify-content:center" class="text-danger fs-6"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+		else
+		{
+			<label class="fs-7">Добавить фото в галерею</label>
+			<div class="gallery__img  mb-2 w-25">
+				<div>
+					<input asp-for="PhotoFiles" type="file" class="form-control" multiple data-val="true" style="display:flex; justify-content:center" />
+					<span asp-validation-for="PhotoFiles" style="display:flex; justify-content:center" class="text-danger fs-6"></span>
+				</div>
+			</div>
+		}
+		@if (Model.VideoList.Count > 0)
+		{
+			<div class="border-bottom text-center">
+				<label class="fs-7 justify-content-center">Добавить/удалить видео</label>
+			</div>
+			<div style="width: 90%;margin: 2rem auto;">
+				<div class="gallery-light">
+					@for (int i = 0; i < Model.VideoList.Count; i++)
+					{
+						<figure class="gallery__item gallery__item">
+							<div>
+								<video controls class="gallery__img"  src="@Model.VideoList[i].Name" alt="Gallery image" />
+							</div>
+							<div style="align-items:center; display:flex; justify-content:center">
+								@Html.CheckBoxFor(model => Model.VideoList[i].IsChecked, new { @class = "form-check-input", id = $"p{@i}" })
+								<label class="form-check-label m-1">Удалить</label>
+							</div>
+							@Html.HiddenFor(model => @Model.VideoList[i].Id)
+							@Html.HiddenFor(model => @Model.VideoList[i].TravelId)
+							@Html.HiddenFor(model => @Model.VideoList[i].Name)
+						</figure>
+					}
+					<div class="gallery__img" style="display: flex;
+							 align-items: center;
+							 justify-content: center;
+							 padding: 16px;
+							 font-size: 1.5rem;
+							 border: 2px dashed rgb(25, 203, 232);
+							 border-radius: 8px;">
+						<div>
+							<input asp-for="VideoFiles" type="file" class="form-control" multiple data-val="true" style="display:flex; justify-content:center" />
+							<span asp-validation-for="VideoFiles" style="display:flex; justify-content:center" class="text-danger fs-6"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+		else
+		{
+			<label class="fs-7">Добавить видео</label>
+			<div class="gallery__img mb-2 w-25" >
+				<div>
+					<input asp-for="VideoFiles" type="file" class="form-control" multiple data-val="true" style="display:flex; justify-content:center" />
+					<span asp-validation-for="VideoFiles" style="display:flex; justify-content:center" class="text-danger fs-6"></span>
+				</div>
+			</div>
+		}
 	</div>
-	<div>
-		<input class="btn btn-primary" type="submit" value="Сохранить" />
+	<div class="text-center">
+		<input class="btn btn-success w-100" type="submit" value="Сохранить" />
 	</div>
 </form>
+@section scripts
+{
+	<script src="/lib/jquery/dist/jquery.min.js"></script>
+	<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/2.1.0/bootstrap-filestyle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	<script>
+		$(':file').filestyle({
+			text: '+', btnClass: 'btn-outline-success', badgeName: 'badge-light', placeholder: 'Выберите файл'
+		});
+	</script>
+	<script>
+		jQuery.validator.unobtrusive.adapters.add('checkmaxfilecount', ['count', 'filetype'], function (options) {
+			options.rules['checkmaxfilecount'] =
+			{
+				count: options.params.count
+			};
+			if (options.message) {
+				options.messages['checkmaxfilecount'] = options.message;
+			}
+		});
+		jQuery.validator.addMethod('checkmaxfilecount', function (value, element, params) {
+			let i = 0
+			let j = 0
+			if (params.filetype == 'photo') {
+				while (i < @Model.PhotoGallery.Count-1) {
+					i++;
+					let check = document.querySelector(`#p${i}`).checked
+					if (check == false)
+						j++;
+				}
+			}
+			else if (params.filetype == 'video') {
+				while (i < @Model.VideoList.Count-1) {
+					i++;
+					let check = document.querySelector(`#p${i}`).checked
+					if (check == false)
+						j++;
+				}
+			}
+			if (element.files.length + j + 1 <= params.count) {
+				return true;
+			}
+			return false;
+		});
+	</script>
+}

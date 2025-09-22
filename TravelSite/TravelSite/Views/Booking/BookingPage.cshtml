@@ -1,49 +1,261 @@
-﻿@using TravelSite.Models.Bookings
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelSite.Data.Models
+@using TravelSite.Models.Bookings
 @{
 	ViewData["Title"] = "BookingPage";
 }
 @model BookingViewModel
+@inject UserManager<User> userManager;
 
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap.css">
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-
-	<div class="border-bottom mb-1">
-		<div>
-			<label class="card-text fst-italic">Тур: @Model.Travel?.Name</label>
-		</div>
-		<div>
-			<label class="card-text fst-italic">Пользователь: @Model.User?.UserName</label>
-		</div>
-		<div>
-			<label class="card-text fst-italic">Дата начала: @Model.From</label>
-		</div>
-		<div>
-			<label class="card-text fst-italic">Дата окончания: @Model.To</label>
-		</div>
-		<div>
-			<label class="card-text fst-italic">Стоимость: @Model.Price</label>
-		</div>
-		<div>
-		<label class="card-text fst-italic">Дата бронирования: @Model.BookDate</label>
-		</div>
+<div class="border-bottom mb-1">
+	<div>
+		<label class="card-text fst-italic">Номер бронирования: @Model.BookingNumber</label>
 	</div>
+	<div>
+		<label class="card-text fst-italic">Название тура: @Model.Travel?.Name</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Пользователь: @Model.User?.UserName</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Дата начала: @Model.From</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Дата окончания: @Model.To</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Стоимость: @Model.Price</label>
+	</div>
+	<div>
+		<label class="card-text fst-italic">Дата бронирования: @Model.BookDate</label>
+	</div>
+	<div class="d-inline-block">
+		<label class="card-text fst-italic">
+			Статус бронирования:
+		</label>
+		<span id="status" class="badge text-bg-warning">
+			@Model.BookingStatus
+		</span>
+	</div>
+</div>
 @if (User.IsInRole("Admin"))
 {
 	<div class="d-inline-block">
 		<form method="get" class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Booking" asp-action="EditBooking">
 			<input asp-for="Id" hidden />
-			<button class="btn btn-primary m-1" type="submit">
+			<button class="btn btn-success" type="submit">
 				Редактировать
 			</button>
 		</form>
 		<form method=post class="d-inline" asp-area="" asp-route-id="@Model.Id" asp-controller="Booking" asp-action="DeleteBooking">
 			<input asp-for="Id" hidden />
-			<button class="btn btn-primary m-1" type="submit">
+			<button class="btn btn-danger" type="submit">
 				Удалить
 			</button>
 		</form>
+		<button id="confirmBtn" class="btn btn-success" type="submit" onclick="ConfirmBooking('@Model.Id.ToString()')">
+			Подтвердить
+		</button>
+		<button id="cancelBtn" class="btn btn-outline-danger" type="submit" onclick="CancelBooking('@Model.Id.ToString()')">
+			Отменить
+		</button>
+
 	</div>
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+	function convertToNormal(str) {
+		return str.replace(/&#?x(.+?);/gi, (match, dec) => String.fromCharCode('0x' + dec));
+	}
+</script>
+<script>
+	function changeButtons(id) {
+		$.ajax({
+			type: 'GET',
+			url: '/Booking/CheckBookingStatus',
+			data: "id=" + id,
+			async: true,
+			success: function (result) {
+				let cancelBtn = document.getElementById('cancelBtn');
+				let confirmBtn = document.getElementById('confirmBtn');
+				let status = document.getElementById('status');
+				if (result != null) {
+					status.innerHTML = result;
+					if (result == 'Pending') {
+						cancelBtn.style.display = 'none';
+						confirmBtn.style.display = 'initial';
+						if (!status.classList.contains('text-bg-warning')) {
+							status.classList.add('text-bg-warning');
+							status.classList.remove('text-bg-danger');
+							status.classList.remove('text-bg-success');
+						}
+					}
+					else if (result == 'Canceled')
+					{
+						cancelBtn.style.display = 'none';
+						confirmBtn.style.display = 'initial';
+						if (!status.classList.contains('text-bg-danger')) {
+							status.classList.add('text-bg-danger');
+							status.classList.remove('text-bg-warning');
+							status.classList.remove('text-bg-success');
+						}
+					}
+					else {
+						confirmBtn.style.display = 'none';
+						cancelBtn.style.display = 'initial';
+						if (!status.classList.contains('text-bg-success')) {
+							status.classList.add('text-bg-success');
+							status.classList.remove('text-bg-warning');
+							status.classList.remove('text-bg-danger');
+						}
+					}
+				}
+				else {
+					confirmBtn.style.display = 'none';
+					cancelBtn.style.display = 'none';
+				}
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+			}
+		});
+	}
+	async function CancelBooking(Id) {
+		let senderId = '@userManager.GetUserId(User)';
+		let bookNum = convertToNormal('@Model.BookingNumber');
+		console.log(senderId);
+
+		$.ajax({
+			type: 'POST',
+			url: '/Booking/CancelBooking',
+			data: "id=" + Id + "&senderId=" + senderId + "&bookNum=" + bookNum,
+			async: true,
+			success: function () {
+				$.ajax({
+					type: 'GET',
+					url: '/Booking/CheckBookingStatus',
+					data: "id=" + Id,
+					async: true,
+					success: function (result) {
+						let status = document.getElementById('status');
+						status.innerHTML = result;
+						if (result != null) {
+							if (status.classList.contains('text-bg-warning')) {
+								status.classList.remove('text-bg-warning');
+							}
+							else {
+								status.classList.remove('text-bg-success');
+							}
+							status.classList.add('text-bg-danger');
+							changeButtons('@Model.Id');
+						}
+					},
+					error: function (xhr, status, error) {
+						console.log(xhr.responseText);
+					}
+				});
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+			}
+		});
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/Notification", { accessTokenFactory: () => localStorage.token })
+			.build();
+		async function start() {
+			await connection.start();
+		}
+		try {
+			await connection.start();
+			console.log("SignalR Connected.");
+		} catch (err) {
+			console.log(err);
+			setTimeout(start, 5000);
+		}
+		try {
+			console.log(bookNum);
+			var userId = '@Model.?User.Id';
+			var bookId = Id;
+			await connection.invoke("BookingCanceled", userId, bookNum);
+		}
+		catch (err) {
+			console.error(err);
+		}
+	}
+	async function ConfirmBooking(Id) {
+		let senderId = '@userManager.GetUserId(User)';
+		let bookNum = convertToNormal('@Model.BookingNumber');
+		console.log(senderId);
+		$.ajax({
+			type: 'POST',
+			url: '/Booking/ConfirmBooking',
+			data: "id=" + Id + "&senderId=" + senderId + "&bookNum=" + bookNum,
+			async: true,
+			success: function () {
+				$.ajax({
+					type: 'GET',
+					url: '/Booking/CheckBookingStatus',
+					data: "id=" + Id,
+					async: true,
+					success: function (result) {
+						let status = document.getElementById('status');
+						status.innerHTML = result;
+						if (result != null) {
+							if (status.classList.contains('text-bg-warning')) {
+								status.classList.remove('text-bg-warning');
+							}
+							else {
+								status.classList.remove('text-bg-danger');
+							}
+							status.classList.add('text-bg-success');
+							changeButtons('@Model.Id');
+						}
+					},
+					error: function (xhr, status, error) {
+						console.log(xhr.responseText);
+					}
+				});
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+				console.log(Id);
+			}
+		});
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/Notification", { accessTokenFactory: () => localStorage.token })
+			.build();
+		async function start() {
+			await connection.start();
+		}
+		try {
+			await connection.start();
+			console.log("SignalR Connected.");
+		} catch (err) {
+			console.log(err);
+			setTimeout(start, 5000);
+		}
+		try {
+			var userId = '@Model.?User.Id';
+			console.log(userId);
+			var bookId = Id;
+			await connection.invoke("BookingConfirmed", userId, bookNum);
+		}
+		catch (err) {
+			console.error(err);
+		}
+	}
+</script>
+<script>
+	window.onload = function () {
+		changeButtons('@Model.Id');
+	};
+</script>

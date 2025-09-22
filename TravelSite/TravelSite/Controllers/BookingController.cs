@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelSite.Data.Repository;
 using TravelSite.Models.Bookings;
 using TravelSite.Services;
 
@@ -51,6 +49,16 @@ namespace TravelSite.Controllers
 			var bookings = await _bookingService.GetAllBookingAsync();
 			return View("BookingList",bookings);
 		}
+
+		[HttpGet]
+		[Authorize]
+		public async Task<IActionResult> GetLastBookingByUser(string id)
+		{
+			var bookings = await _bookingService.GetAllBookingAsync();
+			var lastBooking=bookings.Where(x => x.User?.Id == id).OrderByDescending(x=>x.BookDate).FirstOrDefault();
+			return Json(lastBooking);
+		}
+
 		[Authorize("Admin")]
 		[HttpGet]
 		[Route("EditBooking")]
@@ -78,6 +86,27 @@ namespace TravelSite.Controllers
 		{
 			await _bookingService.RemoveBookingAsync(id);
 			return RedirectToAction("GetAllBooking");
+		}
+		[HttpGet]
+		[Authorize]
+		public async Task<IActionResult> CheckBookingStatus(Guid id)
+		{
+			var booking=await _bookingService.GetBookingAsync(id);
+			return Json(booking.BookingStatus);
+		}
+		[HttpPost]
+		[Authorize("Admin")]
+		public async Task<IActionResult> ConfirmBooking(Guid id, string senderId, string bookNum)
+		{
+			await _bookingService.ConfirmBooking(id, senderId, bookNum);
+			return Ok();
+		}
+		[HttpPost]
+		[Authorize("Admin")]
+		public async Task<IActionResult> CancelBooking(Guid id, string senderId, string bookNum)
+		{
+			await _bookingService.CancelBooking(id, senderId, bookNum);
+			return Ok();
 		}
 	}
 }

@@ -32,6 +32,7 @@ namespace TravelSite.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+
 				await _travelService.AddTravelAsync(model);
 				return RedirectToAction("Index", "Home");
 			}

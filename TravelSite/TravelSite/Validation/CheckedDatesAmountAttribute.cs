@@ -12,14 +12,13 @@ namespace TravelSite.Validation
 		}
 		public override bool IsValid(object? value)
 		{
-			List<TravelDatesViewModel> ?dates = value as List<TravelDatesViewModel>;
+			List<TravelDatesViewModel>? dates = value as List<TravelDatesViewModel>;
 
 			if (dates?.Where(c => c.isChecked == true).ToList().Count > 1)
 			{
 				return false;
 			}
-			return true;	
-
+			return true;
 		}
 	}
 }

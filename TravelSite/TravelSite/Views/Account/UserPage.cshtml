@@ -31,9 +31,7 @@
 					Роли:
 					@foreach (var book in Model.Bookings)
 					{
-
 						<span class="badge bg-warning text-light m-1">@book</span>
-
 					}
 				</div>
 			}
@@ -43,9 +41,7 @@
 					Роли:
 					@foreach (var book in Model.Bookings)
 					{
-
 						<span class="badge bg-warning text-light m-1">@book</span>
-
 					}
 				</div>
 			}
@@ -55,14 +51,14 @@
 	{
 		<div class="d-inline-flex m-1">
 			<form asp-controller="Account" asp-action="AdminEditUser" asp-route-id="@Model.User.Id" method="post">
-				<button type="submit" class="btn btn-primary m-1">
+				<button type="submit" class="btn btn-success m-1">
 					Редактировать
 				</button>
 			</form>
 			@if (UserManager.GetUserId(User) != Model.User.Id)
 			{
 				<form asp-controller="Account" asp-action="DeleteUser" asp-route-id="@Model.User.Id" method="post">
-					<button type="submit" class="btn btn-primary m-1">
+					<button type="submit" class="btn btn-success m-1">
 						Удалить
 					</button>
 				</form>

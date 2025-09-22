@@ -1,29 +1,40 @@
-﻿@using TravelSite.Models.Bookings
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using TravelSite.Data.Models
+@using TravelSite.Models.Bookings
 @{
 	ViewData["Title"] = "AddBooking";
 }
+@inject SignInManager<User> signManager
+@inject UserManager<User> userManager
 @model CreateBookingViewModel
 
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap.css">
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-<form class="frm" method="post" asp-controller="Booking" asp-action="AddBooking">
-	<div asp-validation-summary="ModelOnly"></div>
-	<div class="border-bottom mb-1">
-		<div class="mb-3">
-			<label class="fs-5 mb-1 fw-bolder">@Model.Travel?.Name</label>
-		</div>
-		<div style="align-content:start; margin-bottom:5px">
-			<img style="align-content:center; border-radius:5px" src="@Model.Travel?.Photo" width="350" height="200" />
-		</div>
-		<p class="form-check-inline">
-			@if (Model.TravelDates.Count>0)
-			{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+
+@if (Model.TravelDates.Count > 0)
+{
+	<form class="frm mb-5" method="post" asp-controller="Booking" asp-action="AddBooking">
+		<div asp-validation-summary="ModelOnly"></div>
+		<div class="mb-1">
+			<div class="mb-3">
+				<label class="fs-5 mb-1 fw-bolder">@Model.Travel?.Name</label>
+			</div>
+			<div style="align-content:start; margin-bottom:5px">
+				<img style="align-content:center; border-radius:5px" class="w-50" src="@Model.Travel?.Photo" height="auto" />
+			</div>
+			<p class="form-check-inline">
 				@for (int i = 0; i < Model.TravelDates.Count; i++)
 				{
-					<div class="card mb-1 w-25">
+					<div class="card mb-1 w-50">
 						<div class="card-body">
 							@Html.CheckBoxFor(model => Model.TravelDates[i].isChecked, new { @class = "form-check-input" })
 							<lable class="tag-margin">C: @Model.TravelDates[i].From</lable>
@@ -48,19 +59,82 @@
 						</div>
 					</div>
 				}
-				<span asp-validation-for="TravelDates" class="text-danger"></span>
-			}
-		</p>
-		<input asp-for="@Model.BookDate" hidden>
-		<input asp-for="@Model.BookingStatus" hidden>
-		<input asp-for="@Model.Price" hidden>
-		<input asp-for="@Model.Travel.Id" hidden>
-		<input asp-for="@Model.UserId" hidden>
-		<div>
-			<input class="btn btn-primary" type="submit" value="Подтвердить бронирование" />
+			</p>
+			<input asp-for="@Model.BookDate" hidden>
+			<input asp-for="@Model.BookingStatus" hidden>
+			<input asp-for="@Model.Price" hidden>
+			<input asp-for="@Model.Travel.Id" hidden>
+			<input asp-for="@Model.UserId" hidden>
+			<input asp-for="@Model.BookingNumber" hidden>
+			<div>
+				<input class="btn btn-success" type="submit" value="Подтвердить бронирование" onclick="AddBooking()" />
+			</div>
 		</div>
+	</form>
+}
+else
+{
+	<div class="mb-3">
+		<label class="fs-5 mb-1 fw-bolder">Пока нет вариантов для бронирования</label>
 	</div>
-</form>
+	<div>
+		<a class="" method=get asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Перейти к списку туров</a>
+	</div>
+	@if (User.IsInRole("Admin"))
+	{
+		<div class="mb-3">
+			<form method="post" class="d-inline" asp-area="" asp-route-id="@Model.Travel.Id" asp-controller="TravelDates" asp-action="AddTravelDates">
+				<input asp-for="@Model.Travel.Id" hidden />
+				<button class="btn btn-success m-1" type="submit">
+					Добавить даты
+				</button>
+			</form>
+		</div>
+	}
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
+<script>
+	async function AddBooking() {
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/Notification", { accessTokenFactory: () => localStorage.token })
+			.build();
+		async function start()
+		{
+			await connection.start();
+		}
+		async function getBookingId(userId) {
+			$.ajax({
+				url: '/Booking/GetLastBookingByUser?=' + userId,
+				type: 'GET',
+				success: function (booking) {
+					return booking.Id;
+				},
+				error: function (xhr, status, error) {
+					console.log(xhr.responseText);
+				}
+			});
+		}
+		try {
+			await connection.start();
+			console.log("SignalR Connected.");
+		} catch (err) {
+			console.log(err);
+			setTimeout(start, 5000);
+		}
+		try {
+			var userId = '@Model.UserId';
+			var bookNum = '@Model.BookingNumber';
+			var bookId = await getBookingId(userId);
+			await connection.invoke("BookingCreate", userId, bookNum, bookId);
+		}
+		catch (err) {
+			console.error(err);
+		}
+	}
+</script>
 
 

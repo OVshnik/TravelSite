@@ -23,7 +23,7 @@
 			{
 				<div class="card mb-1">
 					<a class="text-decoration-none" method=get asp-area="" asp-controller="Booking" asp-route-id="@booking.Id" asp-action="GetBooking">
-						<span class="badge bg-warning text-light mb-1">@booking.Id</span>
+						<span class="badge bg-warning text-light mb-1">@booking.BookingNumber</span>
 					</a>
 					<div style="color:darkgray; align-content:start">@booking.User?.UserName</div>
 					<div style="color:darkgray; align-content:start">@booking.Travel?.Name</div>

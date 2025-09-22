@@ -7,6 +7,9 @@ using TravelSite.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using TravelSite;
+using GleamTech.AspNet.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using TravelSite.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,8 @@ string? connection = builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddGleamTech();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 			options.UseSqlServer(connection)).AddIdentity<User, Role>(opts =>
@@ -32,7 +37,9 @@ builder.Services.AddTransient<IOrderRepository, OrderRepository>()
 	.AddTransient<ITravelRepository, TravelRepository>()
 	.AddTransient<IBookingRepository, BookingRepository>()
 	.AddScoped<ITravelDatesRepository, TravelDatesRepository>()
-	.AddScoped<IPhotoRepository, PhotoRepository>();
+	.AddScoped<IPhotoRepository, PhotoRepository>()
+	.AddScoped<IVideoRepository, VideoRepository>()
+	.AddScoped<INotificationRepository<BookingNotification>, BookingNotificationRepository>();
 
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
@@ -41,6 +48,7 @@ builder.Services.AddTransient<ITravelDatesService, TravelDatesService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IFileService, FileService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
@@ -53,6 +61,14 @@ builder.Services.AddAuthorizationBuilder()
 	{
 		policy.RequireClaim(ClaimTypes.Role, "Admin", "UberAdmin");
 	});
+builder.Services.AddRazorPages()
+	.AddViewOptions(options =>
+	{
+		options.HtmlHelperOptions.ClientValidationEnabled = true;
+	});
+
+builder.Services.AddSignalR();
+builder.Services.AddTransient<NotificationHub>();
 
 var app = builder.Build();
 
@@ -64,6 +80,8 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
+app.MapHub<NotificationHub>("/Notification");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -71,6 +89,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseGleamTech();
 
 app.MapControllerRoute(
 	name: "default",

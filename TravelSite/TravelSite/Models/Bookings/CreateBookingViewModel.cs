@@ -12,6 +12,7 @@ namespace TravelSite.Models.Bookings
 	{
 		public DateTime BookDate { get; set; }
 		public string BookingStatus { get; set; } = "";
+		public string BookingNumber { get; set; } = "";
 		public DateOnly From {  get; set; }
 		public DateOnly To { get; set; }
 		public int Price { get; set; }

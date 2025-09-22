@@ -31,7 +31,7 @@ namespace TravelSite.Controllers
 				await _travelDatesService.AddTravelDates(model);
 				return RedirectToAction("Index", "Home");
 			}
-			return RedirectToAction("AddTravelDates");
+			return View("AddTravelDates",model);
 		}
 		[HttpGet]
 		[Route("GetTravelDates")]

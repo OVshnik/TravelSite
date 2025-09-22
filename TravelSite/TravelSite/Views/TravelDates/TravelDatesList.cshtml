@@ -13,33 +13,34 @@
 @if (Model.Count != 0)
 {
 	<div class="mb-5">
-		<label class="fw-bold fs-5">Все возможные даты для туров</label>
+		<div class="text-center">
+			<label class="fw-bold fs-5 ">Все возможные даты для туров</label>
+		</div>
 		@foreach (var group in Model.GroupBy(x => x.Travel?.Name))
 		{
-			<div class="card mb-1 w-50">
+			<div class="card mb-1 w-75 m-auto">
 				<div class="badge bg-warning text-light mb-1">@group.Key</div>
 				@foreach (var date in group)
 				{
-					<div class="card mb-1 w-auto">
+					<div class="mb-1 w-auto">
 						<a class="text-decoration-none" method=get asp-area="" asp-controller="TravelDates" asp-route-id="@date.Id" asp-action="GetTravelDates">
-							<span style="color:black;align-content:start">@date.Id</span>
+							<div style="color:darkgray; align-content:start">Дата начала: @date.From</div>
+							<div style="color:darkgray; align-content:start">Дата окончания: @date.To</div>
+							<div style="color:darkgray; align-content:start">Количество свободных мест: @date.AvailablePlaces</div>
 						</a>
-						<div style="color:darkgray; align-content:start">Дата начала: @date.From</div>
-						<div style="color:darkgray; align-content:start">Дата окончания: @date.To</div>
-						<div style="color:darkgray; align-content:start">Количество свободных мест: @date.AvailablePlaces</div>
 						<div class="d-inline-block">
-						<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="EditTravelDates">
-							<input asp-for="@date.Id" hidden />
-							<button class="btn btn-primary" type="submit">
-								Редактировать
-							</button>
-						</form>
-						<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="DeleteTravelDates">
-							<input asp-for="@date.Id" hidden />
-							<button class="btn btn-primary" type="submit">
-								Удалить
-							</button>
-						</form>
+							<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="EditTravelDates">
+								<input asp-for="@date.Id" hidden />
+								<button class="btn btn-success" type="submit">
+									Редактировать
+								</button>
+							</form>
+							<form method="post" class="d-inline" asp-area="" asp-route-id="@date.Id" asp-controller="TravelDates" asp-action="DeleteTravelDates">
+								<input asp-for="@date.Id" hidden />
+								<button class="btn btn-success" type="submit">
+									Удалить
+								</button>
+							</form>
 						</div>
 					</div>
 				}

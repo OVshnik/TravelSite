@@ -17,15 +17,28 @@
 {
 	if (Model.Travels is not null)
 	{
-
+		<div class="px-5">
+			<label class="fs-2">
+				Уникальные экскурсии по невероятным местам
+			</label>
+			<div>
+				bsdbsgbsfgbsgfbsgsgfdfsvsjhdfbkjhdsfbvjhkdsbvhkjfdbavhkjbafdhvjbakjvbdsfb a fds fb bf b akf 
+				kjsfdkg jkfjg jgskg nkdsjgnkjsngk jnskgdjns dkjgskdjgskdjgksjdngkdsjgnksjngkjns jkg s
+			</div>
+		</div>
 		<div style="width: 90%;margin: 2rem auto;">
 			<div class="gallery">
 				@for(int i=0;i<Model.Travels.Count;i++)
 				{
-					<figure class="gallery__item gallery__item--@(i+1)">
+					<figure class="gallery__item--@(i+1)" style="position:relative;">
 						<a class="" method=get asp-area="" asp-controller="Travel" asp-route-id="@Model.Travels[i].Id" asp-action="GetTravel">
-							<img class="gallery__img" src="@Model.Travels[i].Photo" alt="Gallery image @(i+1)" />
+							<img class="gallery__img background-image" src="@Model.Travels[i].Photo" alt="Gallery image @(i+1)"  />
 						</a>
+						<div>
+							<label class="fs-6" style="color:white; position:absolute; right:5%;bottom:5%">
+								@Model.Travels[i].Name
+							</label>
+						</div>
 					</figure>
 				}
 			</div>

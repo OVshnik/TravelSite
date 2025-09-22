@@ -2,11 +2,13 @@
 using TravelSite.Data.Models;
 using TravelSite.Models.Account;
 using TravelSite.Models.Bookings;
+using TravelSite.Models.Notification;
 using TravelSite.Models.Orders;
 using TravelSite.Models.Roles;
 using TravelSite.Models.TravelDates;
 using TravelSite.Models.TravelPhoto;
 using TravelSite.Models.Travels;
+using TravelSite.Models.TravelVideo;
 
 namespace TravelSite;
 
@@ -36,10 +38,10 @@ namespace TravelSite;
 		CreateMap<Order, OrderViewModel>();
 		CreateMap<Order, EditOrderViewModel>();
 		CreateMap<CreateOrderViewModel, Order>();
-		CreateMap<Travel, TravelViewModel>().ForMember(x => x.PhotoGallery, opt => opt.Ignore()); 
+		CreateMap<Travel, TravelViewModel>().ForMember(x => x.PhotoGallery, opt => opt.Ignore()).ForMember(x => x.VideoList, opt => opt.Ignore());
 		CreateMap<TravelViewModel, Travel>();
-		CreateMap<Travel, EditTravelViewModel>();
-		CreateMap<CreateTravelViewModel, Travel>().ForMember(x => x.PhotoGallery, opt => opt.Ignore());
+		CreateMap<Travel, EditTravelViewModel>().ForMember(x => x.PhotoGallery, opt => opt.Ignore()).ForMember(x => x.VideoList, opt => opt.Ignore());
+		CreateMap<CreateTravelViewModel, Travel>().ForMember(x => x.PhotoGallery, opt => opt.Ignore()).ForMember(x => x.VideoList, opt => opt.Ignore());
 		CreateMap<Travel, CreateTravelViewModel>(); 
 		CreateMap<CreateTravelDatesViewModel, TravelDates>();
 		CreateMap<TravelDates, TravelDatesViewModel>();
@@ -47,5 +49,8 @@ namespace TravelSite;
 		CreateMap<TravelDates, EditTravelDatesViewModel>();
 		CreateMap<TravelPhoto, PhotoViewModel>();
 		CreateMap<PhotoViewModel, TravelPhoto>();
+		CreateMap<VideoViewModel, TravelVideo>();
+		CreateMap<TravelVideo, VideoViewModel>();
+		CreateMap<BookingNotification, NotificationViewModel>();
 	}
 }

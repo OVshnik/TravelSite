@@ -137,6 +137,10 @@ namespace TravelSite.Data.Migrations
                     b.Property<DateTime>("BookDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BookingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BookingStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -167,6 +171,44 @@ namespace TravelSite.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("TravelSite.Data.Models.BookingNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Delivered")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("BookingNotification");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.Order", b =>
@@ -250,10 +292,6 @@ namespace TravelSite.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Video")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Travels");
@@ -314,6 +352,26 @@ namespace TravelSite.Data.Migrations
                     b.HasIndex("TravelId");
 
                     b.ToTable("TravelPhoto");
+                });
+
+            modelBuilder.Entity("TravelSite.Data.Models.TravelVideo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TravelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelId");
+
+                    b.ToTable("TravelVideo");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.User", b =>
@@ -479,6 +537,33 @@ namespace TravelSite.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TravelSite.Data.Models.BookingNotification", b =>
+                {
+                    b.HasOne("TravelSite.Data.Models.Booking", "Booking")
+                        .WithMany("BookingNotifications")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSite.Data.Models.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSite.Data.Models.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("TravelSite.Data.Models.Order", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.Booking", "Booking")
@@ -512,6 +597,17 @@ namespace TravelSite.Data.Migrations
                     b.Navigation("Travel");
                 });
 
+            modelBuilder.Entity("TravelSite.Data.Models.TravelVideo", b =>
+                {
+                    b.HasOne("TravelSite.Data.Models.Travel", "Travel")
+                        .WithMany("VideoList")
+                        .HasForeignKey("TravelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Travel");
+                });
+
             modelBuilder.Entity("TravelSite.Data.Models.User", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.Travel", null)
@@ -521,6 +617,8 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
+                    b.Navigation("BookingNotifications");
+
                     b.Navigation("Order");
                 });
 
@@ -533,6 +631,8 @@ namespace TravelSite.Data.Migrations
                     b.Navigation("TravelDates");
 
                     b.Navigation("UserList");
+
+                    b.Navigation("VideoList");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.TravelDates", b =>

@@ -9,7 +9,6 @@
 	<link rel="stylesheet" href="~/TravelSite.styles.css" asp-append-version="true" />
 </head>
 <body>
-
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container-fluid">
@@ -30,7 +29,6 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Туры</a>
 							</li>
-
 							@if (User.IsInRole("Admin"))
 							{
 								<li class="nav-item">
@@ -40,7 +38,6 @@
 									<a class="nav-link text-dark" asp-area="" asp-controller="TravelDates" asp-action="GetAllTravelDates">Даты туров</a>
 								</li>
 							}
-
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Help">Помощь</a>
 							</li>
@@ -54,8 +51,15 @@
 								</form>
 							</li>
 						</ul>
+						<div style="position:relative">
+							<a class="text-decoration-none;color:darkgray;" method=get asp-area="" asp-controller="Notification" asp-route-id="" asp-action="GetNotifications">
+								<img style="align-content:center; border-radius:5px; background-image;position:relative;z-index:1" src="~/Notify.png" width="60%" height="auto" />
+								<span id="not" class="badge text-bg-danger text-light p-1 m-1" style="border-radius:50%;position:absolute; top: -10px; right: 5px;"></span>
+							</a>
+						</div>
 						<ul class="navbar-nav align-items-center">
 							<li class="nav-item">
+
 								<div class="dropdown">
 									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 										@User.Identity.Name
@@ -104,11 +108,11 @@
 		</nav>
 	</header>
 	<div class="container align-content-center">
-		<main role="main" class="pb-3 align-content-center align-self-center">
+		<main role="main" class="pb-3">
 			@RenderBody()
 		</main>
 	</div>
-	<footer class="border-top footer text-muted">
+	<footer class="footer border-top text-muted">
 		<div class="container">
 			&copy; 2025 - TravelSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 		</div>
@@ -116,3 +120,95 @@
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+	async function CheckNotification() {
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/Notification", { transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling })
+			.build();
+		try {
+			await connection.start();
+			console.log("SignalR Connected.");
+		}
+		catch (err) {
+			console.log(err);
+			setTimeout(start, 5000);
+		}
+		let id;
+		function GetLastBooking(userId) {
+			$.ajax({
+				url: '/Booking/GetLastBookingByUser?=' + userId,
+				type: 'GET',
+				async: true,
+				success: function (booking) {
+					return booking.Id;
+				},
+				error: function (xhr, status, error) {
+					console.log(xhr.responseText);
+				}
+			});
+		}
+		function RedirectToPage() {
+			const str = "https://localhost:7081/GetBooking?id=" + id.toString();
+			window.location.replace(str);
+		}
+
+		toastr.options = {
+			"closeButton": true,
+			"debug": true,
+			"newestOnTop": false,
+			"progressBar": true,
+			"positionClass": "toast-top-center",
+			"preventDuplicates": false,
+			"onclick": RedirectToPage,
+			"showDuration": "3000000",
+			"hideDuration": "1000000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		};
+		connection.on("BookingCreateNotify", async (message, userId) => {
+			toastr.success(message);
+			id = GetLastBooking(userId);
+		});
+		connection.on("BookingConfirmed", async (message, userId) => {
+			toastr.success(message);
+			id = GetLastBooking(userId);
+		});
+	}
+</script>
+<script>
+	async function CheckNewNotification() {
+		function GetAllNewNotifications() {
+			$.ajax({
+				url: '/Notification/GetAllNewNotifications',
+				type: 'GET',
+				success: function (nots) {
+					let elem = document.getElementById('not');
+					if (nots.length > 0) {
+						elem.innerHTML = nots.length.toString();
+					}
+					else
+					{
+						elem.hidden = true;
+					}
+				},
+				error: function (xhr, status, error) {
+					console.log(xhr.responseText);
+				}
+			});
+		}
+		GetAllNewNotifications();
+		setInterval(GetAllNewNotifications, 3000);
+	}
+</script>
+<script>
+	CheckNotification();
+	CheckNewNotification();
+</script>

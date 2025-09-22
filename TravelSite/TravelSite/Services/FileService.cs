@@ -23,5 +23,14 @@ namespace TravelSite.Services
 
 			return fileName;
 		}
+		public void DeleteFileInFolder(string path,string fileName)
+		{
+			var filePath = Path.Combine(path, fileName);
+
+			using (FileStream stream = new FileStream(fileName, FileMode.OpenOrCreate))
+			{
+				File.Delete(filePath);
+			}
+		}
 	}
 }

@@ -26,7 +26,12 @@ body {
     grid-template-rows: repeat(8, 5vw);
     grid-gap: 1rem;
 }
-
+.gallery-light {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 1rem;
+    justify-content:center;
+}
 .gallery__img {
     width: 100%;
     height: 100%;

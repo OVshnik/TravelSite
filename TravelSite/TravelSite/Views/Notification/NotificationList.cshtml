@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TravelSite.Data.Models
+@using TravelSite.Models.Notification
+@inject SignInManager<User> signInManager;
+@inject UserManager<User> userManager;
+@{
+	ViewData["Title"] = "NotificationList";
+}
+@model List<NotificationViewModel>
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+
+@if (Model.Count != 0)
+{
+	var userId = userManager.GetUserId(User);
+	var notifications = Model.Where(x => x.RecipientId == userManager.GetUserId(User)).ToList();
+	if (notifications.Count != 0)
+	{
+		<div class="mb-5 d-block">
+			<div>
+				<label class="fw-bold fs-5">Все Уведомления</label>
+			</div>
+			@foreach (var notification in notifications)
+			{
+				<table>
+					<tr>
+						<td width="500">
+							<div class="card mb-1 d-inline-block">
+								<a style="color:darkgray; align-content:start; text-decoration:none" class="d-inline-block" method=get asp-area="" asp-route-id="@notification.BookingId" asp-controller="Booking" asp-action="GetBooking" onclick="MarkNotificationAsDelivered('@notification.Id.ToString()')">@notification.Content</a>
+							</div>
+						</td>
+						<td width="150">
+							<div class="d-inline-block">
+								@if (notification.Delivered != true)
+								{
+									<span id='@notification.Id.ToString()' class="badge text-bg-warning m-1" type="submit" onclick="MarkNotificationAsDelivered('@notification.Id.ToString()')">
+										Отметить как
+										прочитанное
+									</span>
+								}
+								else
+								{
+									<span class="badge text-bg-success m-1">
+										Прочитано
+									</span>
+								}
+							</div>
+						</td>
+					</tr>
+				</table>
+			}
+			<form class="frm mb-5" method="post" asp-controller="Notification" asp-action="ClearNotifications" asp-route-userId="@userId">
+				<button class="btn btn-outline-success m-1" type="submit">
+					Очистить
+				</button>
+			</form>
+		</div>
+	}
+	else
+	{
+		<label class="fs-5">Уведомлений пока нет</label>
+	}
+}
+else
+{
+	<label class="fs-5">Уведомлений пока нет</label>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+	async function MarkNotificationAsDelivered(Id) {
+		$.ajax({
+			url: '/Notification/MarkNotificationAsDelivered?id=' + Id,
+			type: 'POST',
+			success: function () {
+				let btn = document.getElementById(Id);
+				btn.classList.remove('text-bg-warning');
+				btn.classList.add('text-bg-success');
+				btn.innerHTML = 'Прочитано';
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+			}
+		});
+	}
+</script>

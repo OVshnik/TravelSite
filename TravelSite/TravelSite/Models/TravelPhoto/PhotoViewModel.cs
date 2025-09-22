@@ -7,5 +7,6 @@ namespace TravelSite.Models.TravelPhoto
 		public Guid Id { get; set; }
 		public string Name { get; set; } = string.Empty;
 		public Guid TravelId { get; set; }
+		public bool IsChecked { get; set; }
 	}
 }

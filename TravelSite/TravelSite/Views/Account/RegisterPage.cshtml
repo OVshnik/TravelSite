@@ -3,12 +3,16 @@
 	ViewData["Title"] = "Register";
 }
 @model RegisterViewModel
-
-<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
 
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
@@ -17,9 +21,9 @@
 
 @if (User.IsInRole("Admin"))
 {
-	<form class="frm" method="post" asp-controller="Account" asp-action="AdminRegister">
+	<form class="frm" method="post" asp-controller="Account" asp-action="Register">
 		<div asp-validation-summary="ModelOnly" />
-@* 		<p class="form-check-inline">
+		<p class="form-check-inline">
 			@if (Model is not null)
 			{
 				@if (Model.Roles.Count != 0)
@@ -35,7 +39,7 @@
 					}
 				}
 			}
-		</p> *@
+		</p>
 		<div>
 			<div class="mb-3">
 				<input asp-for="FirstName" class="form-control" />
@@ -76,7 +80,7 @@
 			<span asp-validation-for="BirthDate" class="text-danger"></span>
 		</div>
 		<div>
-			<input class="btn btn-primary" type="submit" value="Зарегистрироваться" />
+			<input class="btn btn-success" type="submit" value="Зарегистрироваться" />
 		</div>
 	</form>
 }
@@ -124,7 +128,7 @@ else
 			<span asp-validation-for="BirthDate" class="text-danger"></span>
 		</div>
 		<div>
-			<input class="btn btn-primary" type="submit" value="Зарегистрироваться" />
+			<input class="btn btn-success" type="submit" value="Зарегистрироваться" />
 		</div>
 	</form>
 }

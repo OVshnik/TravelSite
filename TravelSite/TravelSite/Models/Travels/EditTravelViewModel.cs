@@ -1,6 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using TravelSite.Data.Models;
 using TravelSite.Models.TravelPhoto;
+using TravelSite.Models.TravelVideo;
+using TravelSite.Validation;
 
 namespace TravelSite.Models.Travels
 {
@@ -19,12 +22,15 @@ namespace TravelSite.Models.Travels
 		[DataType(DataType.Text)]
 		[Display(Name = "Категория", Prompt = "Введите название категории")]
 		public string Category { get; set; } = string.Empty;
-		[DataType(DataType.Text)]
-		[Display(Name = "Фото", Prompt = "Добавьте ссылку на фото")]
-		public string Photo { get; set; } = string.Empty;
-		[DataType(DataType.Text)]
-		[Display(Name = "Видео", Prompt = "Добавьте ссылку на видео")]
-		public string Video { get; set; } = string.Empty;
-		public List<PhotoViewModel> PhotoGallery = new List<PhotoViewModel>();
+		public string Photo { get; set; }= string.Empty;
+		[Display(Prompt = "Добавьте основное фото")]
+		public IFormFile? EditPhoto { get; set; }
+		public List<PhotoViewModel> PhotoGallery { get; set; } = new List<PhotoViewModel>();
+		public List<VideoViewModel> VideoList { get; set; } = new List<VideoViewModel>();
+
+		[CheckMaxFileCount(5,"photo")]
+		public IEnumerable<IFormFile> ?PhotoFiles { get; set; }
+		[CheckMaxFileCount(2, "video")]
+		public IEnumerable<IFormFile> ?VideoFiles { get; set; }
 	}
 }

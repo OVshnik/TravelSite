@@ -19,10 +19,6 @@ namespace TravelSite.Extensions
 			{
 				travel.Category = model.Category;
 			}
-			if (!string.IsNullOrEmpty(model.Video))
-			{
-				travel.Video = model.Video;
-			}
 			if (!string.IsNullOrEmpty(model.Photo))
 			{
 				travel.Photo = model.Photo;

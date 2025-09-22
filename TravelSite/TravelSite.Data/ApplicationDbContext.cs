@@ -14,6 +14,8 @@ namespace TravelSite.Data
 		public DbSet<Booking> Bookings { get; set; }
 		public DbSet<TravelDates> TravelDates { get; set; }
 		public DbSet<TravelPhoto> TravelPhoto { get; set; }
+		public DbSet<TravelVideo> TravelVideo { get; set; }
+		public DbSet<BookingNotification> Notifications { get; set; }
 		public ApplicationDbContext()
 		{
 		}

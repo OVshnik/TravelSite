@@ -9,8 +9,9 @@ namespace TravelSite.Data.Models
 	public class Booking
 	{
 		public Guid Id { get; set; }=Guid.NewGuid();
+		public string BookingNumber { get; set; } = string.Empty;
 		public DateTime BookDate { get; set; }= DateTime.Now;
-		public string BookingStatus { get; set; } = "";
+		public string BookingStatus { get; set; } = String.Empty;
 
 		public Guid TravelDatesId { get; set; }
 		public TravelDates? TravelDates { get; set; }
@@ -24,5 +25,6 @@ namespace TravelSite.Data.Models
 		public string UserId { get; set; } = "";
 		public User? User { get; set; }
 		public Order? Order { get; set; }
+		public List<BookingNotification> BookingNotifications { get; set; }= new List<BookingNotification>();
 	}
 }

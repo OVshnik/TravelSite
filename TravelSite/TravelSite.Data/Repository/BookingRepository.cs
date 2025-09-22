@@ -45,7 +45,7 @@ namespace TravelSite.Data.Repository
 			var booking = await _context.Bookings.Where(x => x.Id == id).
 				Include(x => x.Travel).
                 Include(y => y.User).
-				Include(z => z.Order).FirstOrDefaultAsync();
+				Include(z => z.Order).AsNoTracking().FirstOrDefaultAsync();
 			return booking;
 		}
 
