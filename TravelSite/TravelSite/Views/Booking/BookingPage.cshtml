@@ -79,10 +79,11 @@
 	function changeButtons(id) {
 		$.ajax({
 			type: 'GET',
-			url: '/Booking/CheckBookingStatus',
+			url: '/Booking/CheckBooking',
 			data: "id=" + id,
 			async: true,
 			success: function (result) {
+				console.log('work');
 				let cancelBtn = document.getElementById('cancelBtn');
 				let confirmBtn = document.getElementById('confirmBtn');
 				let status = document.getElementById('status');
@@ -97,8 +98,7 @@
 							status.classList.remove('text-bg-success');
 						}
 					}
-					else if (result == 'Canceled')
-					{
+					else if (result == 'Canceled') {
 						cancelBtn.style.display = 'none';
 						confirmBtn.style.display = 'initial';
 						if (!status.classList.contains('text-bg-danger')) {
@@ -130,8 +130,6 @@
 	async function CancelBooking(Id) {
 		let senderId = '@userManager.GetUserId(User)';
 		let bookNum = convertToNormal('@Model.BookingNumber');
-		console.log(senderId);
-
 		$.ajax({
 			type: 'POST',
 			url: '/Booking/CancelBooking',
@@ -140,10 +138,11 @@
 			success: function () {
 				$.ajax({
 					type: 'GET',
-					url: '/Booking/CheckBookingStatus',
+					url: '/Booking/CheckBooking',
 					data: "id=" + Id,
 					async: true,
 					success: function (result) {
+						console.log('work');
 						let status = document.getElementById('status');
 						status.innerHTML = result;
 						if (result != null) {
@@ -193,6 +192,7 @@
 	async function ConfirmBooking(Id) {
 		let senderId = '@userManager.GetUserId(User)';
 		let bookNum = convertToNormal('@Model.BookingNumber');
+		let url = '@Url.ActionContext';
 		console.log(senderId);
 		$.ajax({
 			type: 'POST',
@@ -202,11 +202,12 @@
 			success: function () {
 				$.ajax({
 					type: 'GET',
-					url: '/Booking/CheckBookingStatus',
+					url: '/Booking/CheckBooking',
 					data: "id=" + Id,
 					async: true,
 					success: function (result) {
 						let status = document.getElementById('status');
+						console.log('work');
 						status.innerHTML = result;
 						if (result != null) {
 							if (status.classList.contains('text-bg-warning')) {

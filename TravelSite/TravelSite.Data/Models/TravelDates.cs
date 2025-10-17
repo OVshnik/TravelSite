@@ -18,7 +18,7 @@ namespace TravelSite.Data.Models
 		public int Price { get; set; }
 		public Guid TravelId { get; set; }
 		public Travel? Travel { get; set; }
-		public Booking? Booking { get; set; }
+		public List<Booking> Bookings { get; set; }=new List<Booking>();
 
 	}
 }

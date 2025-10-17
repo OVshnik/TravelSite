@@ -140,8 +140,6 @@
 		<input class="btn btn-success w-100" type="submit" value="Сохранить" />
 	</div>
 </form>
-@section scripts
-{
 	<script src="/lib/jquery/dist/jquery.min.js"></script>
 	<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/2.1.0/bootstrap-filestyle.min.js"></script>
@@ -159,16 +157,18 @@
 		jQuery.validator.unobtrusive.adapters.add('checkmaxfilecount', ['count', 'filetype'], function (options) {
 			options.rules['checkmaxfilecount'] =
 			{
-				count: options.params.count
+				count: options.params.count,
+				filetype: options.params.filetype
 			};
 			if (options.message) {
 				options.messages['checkmaxfilecount'] = options.message;
 			}
 		});
 		jQuery.validator.addMethod('checkmaxfilecount', function (value, element, params) {
-			let i = 0
-			let j = 0
+			let i = 0;
+			let j = 0;
 			if (params.filetype == 'photo') {
+
 				while (i < @Model.PhotoGallery.Count-1) {
 					i++;
 					let check = document.querySelector(`#p${i}`).checked
@@ -190,4 +190,3 @@
 			return false;
 		});
 	</script>
-}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using TravelSite.Models;
 using TravelSite.Models.Account;
 
 namespace TravelSite.Services
@@ -17,5 +18,8 @@ namespace TravelSite.Services
 		public Task<UserEditViewModel> EditUser(string id);
 		public Task<UserViewModel> GetCurrentUserAsync(ClaimsPrincipal claims);
 		public Task CreateAdmin();
+		public Task AddRefs(RefsViewModel model);
+
+		public Task<RefsViewModel> AddRefs();
 	}
 }

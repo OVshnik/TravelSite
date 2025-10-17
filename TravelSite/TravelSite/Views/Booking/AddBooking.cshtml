@@ -12,15 +12,8 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap.css">
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
-
-@if (Model.TravelDates.Count > 0)
+@if (Model.TravelDates.Count() > 0)
 {
 	<form class="frm mb-5" method="post" asp-controller="Booking" asp-action="AddBooking">
 		<div asp-validation-summary="ModelOnly"></div>
@@ -36,7 +29,8 @@
 				{
 					<div class="card mb-1 w-50">
 						<div class="card-body">
-							@Html.CheckBoxFor(model => Model.TravelDates[i].isChecked, new { @class = "form-check-input" })
+							@Html.CheckBoxFor(model => Model.TravelDates[i].isChecked, new { @class = "form-check-input", @id = "tr" + i, @onClick = $"checkElement({i},'{Model.UserId.ToString()}','{Model.TravelDates[i].TravelId.ToString()}','{Model.TravelDates[i].Id.ToString()}')" })
+
 							<lable class="tag-margin">C: @Model.TravelDates[i].From</lable>
 							<lable class="tag-margin">До: @Model.TravelDates[i].To</lable>
 							<div>
@@ -58,7 +52,9 @@
 							@Html.HiddenFor(model => @Model.TravelDates[i].TravelId)
 						</div>
 					</div>
+
 				}
+				<span id="alert" class="text-danger" hidden>У вас уже есть бронирование на эти даты</span>
 			</p>
 			<input asp-for="@Model.BookDate" hidden>
 			<input asp-for="@Model.BookingStatus" hidden>
@@ -67,7 +63,7 @@
 			<input asp-for="@Model.UserId" hidden>
 			<input asp-for="@Model.BookingNumber" hidden>
 			<div>
-				<input class="btn btn-success" type="submit" value="Подтвердить бронирование" onclick="AddBooking()" />
+				<input id="confirmBtn" class="btn btn-success" type="submit" value="Подтвердить бронирование" onclick="AddBooking()" />
 			</div>
 		</div>
 	</form>
@@ -92,18 +88,23 @@ else
 		</div>
 	}
 }
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
 	async function AddBooking() {
 		const connection = new signalR.HubConnectionBuilder()
 			.withUrl("/Notification", { accessTokenFactory: () => localStorage.token })
 			.build();
-		async function start()
-		{
+		async function start() {
 			await connection.start();
 		}
 		async function getBookingId(userId) {
@@ -136,5 +137,58 @@ else
 		}
 	}
 </script>
+<script>
+	function checkElement(i, userId, travelId, dateId) {
+		let k = 0;
+		let check = document.querySelector(`#tr${i}`);
+		if (check.checked) {
+			while (k < @Model.TravelDates.Count) {
+				if (k != i) {
+					let item = document.querySelector(`#tr${k}`);
+					item.disabled = "disabled";
+					CheckDates(userId, travelId, dateId);
+				}
+				k++;
+			};
+		}
+		else {
+			while (k < @Model.TravelDates.Count) {
+				if (k != i) {
+					let item = document.querySelector(`#tr${k}`);
+					item.disabled = "";
+					let elem = document.getElementById('alert');
+					elem.hidden = true;
+					let btn = document.getElementById('confirmBtn');
+					btn.disabled = "disabled";
+				}
+				k++;
+			};
+		}
+	}
+</script>
+<script>
+	function CheckDates(userId, travelId, datesId) {
+		$.ajax({
+			type: 'GET',
+			url: '/Booking/CheckDates',
+			data: "userId=" + userId + "&travelId=" + travelId + "&datesId=" + datesId,
+			async: true,
+			success: function (result) {
+				let elem = document.getElementById('alert');
+				let btn = document.getElementById('confirmBtn');
+				if (!result) {
+					elem.hidden = false;
+					btn.disabled = "disabled";
+				}
+				else {
+					elem.hidden = true;
+					btn.disabled = "";
+				}
 
-
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+			}
+		});
+	}
+</script>

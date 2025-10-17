@@ -25,6 +25,6 @@ namespace TravelSite.Data.Models
 		public string UserId { get; set; } = "";
 		public User? User { get; set; }
 		public Order? Order { get; set; }
-		public List<BookingNotification> BookingNotifications { get; set; }= new List<BookingNotification>();
+		public List<BookingNotification> BookingNotifications { get; set; } = new List<BookingNotification>();
 	}
 }

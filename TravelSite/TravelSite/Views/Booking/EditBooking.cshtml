@@ -44,12 +44,19 @@
 		</div>
 		<div class="mb-3">
 			<label class="text-dark-emphasis">Статус бронирования</label>
-			<input asp-for="BookingStatus" class="form-control">
+            <div class="d-block">
+				<select asp-for="BookingStatus" class="dropdown-toggle" style="max-width:fit-content; border-radius:5px;">
+					<option class="dropdown-item">Confirmed</option>
+					<option class="dropdown-item">Pending</option>
+					<option class="dropdown-item">Cancel</option>
+				</select>
+			</div>
+
 			<span asp-validation-for="BookingStatus" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
-			<label class="text-dark-emphasis">Цена</label>
-			<input asp-for="Price" class="form-control">
+			<label class="text-dark-emphasis">Стоимость</label>
+			<input asp-for="Price" class="form-control" style="max-width:fit-content">
 			<span asp-validation-for="Price" class="text-danger"></span>
 		</div>
 	</div>

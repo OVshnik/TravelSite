@@ -17,7 +17,8 @@ namespace TravelSite.Data.Repository
 		}
 		public async Task CreateBookingAsync(Booking booking)
 		{
-			_context.Entry(booking).State = EntityState.Added;
+			//_context.Entry(booking).State = EntityState.Added;
+			_context.Bookings.Add(booking);
 			await _context.SaveChangesAsync();
 		}
 
@@ -45,7 +46,8 @@ namespace TravelSite.Data.Repository
 			var booking = await _context.Bookings.Where(x => x.Id == id).
 				Include(x => x.Travel).
                 Include(y => y.User).
-				Include(z => z.Order).AsNoTracking().FirstOrDefaultAsync();
+				Include(z => z.Order).
+			Include(z => z.BookingNotifications).AsNoTracking().FirstOrDefaultAsync();
 			return booking;
 		}
 

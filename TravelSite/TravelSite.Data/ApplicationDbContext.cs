@@ -4,6 +4,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using TravelSite.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection.Emit;
+using TravelSite.Data.Migrations;
 
 namespace TravelSite.Data
 {
@@ -35,7 +36,10 @@ namespace TravelSite.Data
 			base.OnModelCreating(builder);
 			builder.Entity<TravelDates>()
 			.ToTable(t => t.HasCheckConstraint("AvailablePlaces", "AvailablePlaces <= MaxPlaces"));
+			builder.Entity<BookingNotification>().HasOne(t => t.Sender).WithMany(x => x.SendNotifications).HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.ClientSetNull);
+			builder.Entity<BookingNotification>().HasOne(t => t.Recipient).WithMany(x => x.ReceivedNotifications).HasForeignKey(x => x.RecipientId).OnDelete(DeleteBehavior.ClientSetNull);
+			builder.Entity<BookingNotification>().HasOne(x => x.Booking).WithMany(x => x.BookingNotifications).HasForeignKey(x => x.BookingId);
+			builder.Entity<TravelDates>().HasMany(x => x.Bookings).WithOne(x => x.TravelDates).HasForeignKey(x => x.TravelDatesId);
 		}
-
 	}
 }

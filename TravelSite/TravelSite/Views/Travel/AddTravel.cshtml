@@ -54,33 +54,33 @@
 	</div>
 </form>
 <div>
-	<label for="exampleInputPassword1" class="form-label">
+	<label class="form-label">
 		<a class="" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Перейти к списку всех туров</a>
 	</label>
 </div>
-@section scripts
-{
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
-	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-	<script>
-		jQuery.validator.unobtrusive.adapters.add('checkmaxfilecount', ['count'], function (options) {
-			options.rules['checkmaxfilecount'] =
-			{
-				count: options.params.count
-			};
-			if (options.message) {
-				options.messages['checkmaxfilecount'] = options.message;
-			}
-		});
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+	jQuery.validator.unobtrusive.adapters.add('checkmaxfilecount', ['count'], function (options) {
+		
+		options.rules['checkmaxfilecount'] =
+		{
+			count: options.params.count
+		};
+		if (options.message) {
+			options.messages['checkmaxfilecount'] = options.message;
+		}
+	});
 
-		jQuery.validator.addMethod('checkmaxfilecount', function (value, element, params) {
-			if (element.files.length <= params.count) {
-				return true;
-			}
-			return false;
-		});
-	</script>
-}
+	jQuery.validator.addMethod('checkmaxfilecount', function (value, element, params) {
+		console.log('work');
+		if (element.files.length <= params.count) {
+			return true;
+		}
+		return false;
+	});
+</script>
+

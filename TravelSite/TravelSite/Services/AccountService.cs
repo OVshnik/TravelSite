@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Esf;
 using System.Security.Claims;
 using TravelSite.Data.Models;
 using TravelSite.Extensions;
+using TravelSite.Models;
 using TravelSite.Models.Account;
 using TravelSite.Models.Roles;
 
@@ -15,14 +17,20 @@ namespace TravelSite.Services
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signInManager;
-		private RoleManager<Role> _roleManager;
+		private readonly RoleManager<Role> _roleManager;
 		private readonly IMapper _mapper;
-		public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IMapper mapper)
+		private readonly IFileService _fileService;
+		public AccountService(UserManager<User> userManager, 
+			SignInManager<User> signInManager, 
+			RoleManager<Role> roleManager, 
+			IMapper mapper,
+			IFileService fileService)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_roleManager = roleManager;
 			_mapper = mapper;
+			_fileService = fileService;
 		}
 	
 		public async Task<IdentityResult> DeleteUserAsync(string id)
@@ -193,15 +201,32 @@ namespace TravelSite.Services
 				LastName = "Adminov",
 				Email = "admin@gmail.com",
 				BirthDate = new DateTime(1995, 01, 11),
-				UserName="admin@gmail.com"
+				UserName = "admin@gmail.com"
 			};
-			
-			if (await _userManager.FindByIdAsync(newUser.Id)==null)
+
+			if (await _userManager.FindByIdAsync(newUser.Id) == null)
 			{
-				var result=await _userManager.CreateAsync(newUser, "admin1995");
+				var result = await _userManager.CreateAsync(newUser, "admin1995");
 				if (result.Succeeded)
-				await _userManager.AddToRoleAsync(newUser, "Admin");
+					await _userManager.AddToRoleAsync(newUser, "Admin");
 			}
+		}
+		public async Task AddRefs(RefsViewModel model)
+		{
+			await _fileService.SaveFileInFolder("wwwroot/etc", model.Url1, ".txt", "telegramRef");
+			await _fileService.SaveFileInFolder("wwwroot/etc", model.Url2, ".txt", "whatsupRef");
+		}
+		public async Task<RefsViewModel> AddRefs()
+		{
+			var model=new RefsViewModel();
+			var url1=await _fileService.ReadFileInFolder("wwwroot/etc", ".txt", "telegramRef");
+			var url2=await _fileService.ReadFileInFolder("wwwroot/etc", ".txt", "whatsupRef");
+			if(url1 != null && url2 != null)
+			{
+				model.Url1 = url1;
+				model.Url2 = url2;
+			}
+			return model;
 		}
 	}
 }

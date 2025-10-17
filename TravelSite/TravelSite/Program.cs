@@ -10,6 +10,8 @@ using TravelSite;
 using GleamTech.AspNet.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using TravelSite.Notifications;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +51,7 @@ builder.Services.AddTransient<IBookingService, BookingService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IFileService, FileService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
@@ -69,6 +72,11 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddSignalR();
 builder.Services.AddTransient<NotificationHub>();
+builder.Services.AddMvc()
+  .AddJsonOptions(o =>
+  {
+	  o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+  });
 
 var app = builder.Build();
 

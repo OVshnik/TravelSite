@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TravelSite.Data.Models;
+using TravelSite.Models;
 using TravelSite.Models.Account;
 using TravelSite.Services;
 
@@ -88,8 +89,8 @@ namespace TravelSite.Controllers
 					}
 
 				}
-                return View("RegisterPage");
-            }
+				return View("RegisterPage");
+			}
 		}
 		[Authorize]
 		[Route("MyPage")]
@@ -184,8 +185,28 @@ namespace TravelSite.Controllers
 			await _accountService.DeleteUserAsync(id);
 
 			_logger.LogDebug($"Пользователь {user.User.Email} удален", user.User.Email);
-			return View("UserList");
+			return RedirectToAction("GetAllUsers");
 		}
-
+		[Authorize("Admin")]
+		[Route("AdminSettings")]
+		[HttpGet]
+		public async Task<IActionResult> AdminSettings()
+		{
+			return View(await _accountService.AddRefs());
+		}
+		[Authorize("Admin")]
+		[Route("AddReferences")]
+		[HttpPost]
+		public IActionResult AddRefs(RefsViewModel model)
+		{
+			_accountService.AddRefs(model);
+			return RedirectToAction("AdminSettings");
+		}
+		[HttpGet]
+		public async Task<IActionResult> GetUrls()
+		{
+			var model = await _accountService.AddRefs();
+			return Json(model);
+		}
 	}
 }

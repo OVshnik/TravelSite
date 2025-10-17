@@ -1,0 +1,29 @@
+﻿@using TravelSite.Data.Models
+@using TravelSite.Models.Account
+@using Microsoft.AspNetCore.Identity
+@{
+	ViewData["Title"] = "AdminSettings";
+}
+@model RefsViewModel
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<label class="mb-1">Настройки</label>
+<div class="mb-1">
+	<form class="frm" method="post" asp-controller="Account" asp-action="AddRefs">
+		<div asp-validation-summary="ModelOnly"></div>
+		<div class="mb-1 card w-75">
+			<div class="card-body">
+				<div class="mb-1 w-75">
+					<input asp-for="Url1" class="form-control w-50"></input>
+				</div>
+				<div class="mb-1 w-75">
+					<input asp-for="Url2" class="form-control w-50"></input>
+				</div>
+			</div>
+		</div>
+		<div>
+			<input class="btn btn-success" type="submit" value="Добавить" />
+		</div>
+	</form>
+</div>

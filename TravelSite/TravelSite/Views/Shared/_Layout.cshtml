@@ -4,7 +4,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - TravelSite</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/TravelSite.styles.css" asp-append-version="true" />
 </head>
@@ -54,7 +54,7 @@
 						<div style="position:relative">
 							<a class="text-decoration-none;color:darkgray;" method=get asp-area="" asp-controller="Notification" asp-route-id="" asp-action="GetNotifications">
 								<img style="align-content:center; border-radius:5px; background-image;position:relative;z-index:1" src="~/Notify.png" width="60%" height="auto" />
-								<span id="not" class="badge text-bg-danger text-light p-1 m-1" style="border-radius:50%;position:absolute; top: -10px; right: 5px;"></span>
+								<span id="not" class="badge text-bg-danger p-1 m-1" style="border-radius:50%;position:absolute; top: -10px; right: 5px;"></span>
 							</a>
 						</div>
 						<ul class="navbar-nav align-items-center">
@@ -71,9 +71,15 @@
 										<li>
 											<a class="dropdown-item" asp-area="" asp-controller="Booking" asp-action="GetAllBooking">Бронирования</a>
 										</li>
-										<li>
+@* 										<li>
 											<a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="GetAllOrders">Заказы</a>
+										</li> *@
+										@if(User.IsInRole("Admin"))
+										{
+										<li>
+											<a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="AdminSettings">Настройки</a>
 										</li>
+										}
 										<li>
 											<form asp-area="" asp-action="Logout" asp-controller="Account">
 												<button type="submit" class="dropdown-item">
@@ -113,11 +119,21 @@
 		</main>
 	</div>
 	<footer class="footer border-top text-muted">
-		<div class="container">
+		<div class="container d-inline-block w-auto">
 			&copy; 2025 - TravelSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 		</div>
+		<div class="container d-inline-block" style="width:50px; height:auto; padding-right:0">
+			<a id="ref1" href="">
+				<img src="~/whatsapp.svg" width="100%" height="auto"/>
+			</a>
+		</div>
+		<div class="container d-inline-block" style="width:50px; height:auto; padding-left:0">
+			<a id="ref2" href="">
+				<img src="~/telegram.svg" width="100%" height="auto"/>
+			</a>
+		</div>
 	</footer>
-	@await RenderSectionAsync("Scripts", required: false)
+	@* 	@await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -185,6 +201,7 @@
 </script>
 <script>
 	async function CheckNewNotification() {
+
 		function GetAllNewNotifications() {
 			$.ajax({
 				url: '/Notification/GetAllNewNotifications',
@@ -194,8 +211,7 @@
 					if (nots.length > 0) {
 						elem.innerHTML = nots.length.toString();
 					}
-					else
-					{
+					else {
 						elem.hidden = true;
 					}
 				},
@@ -209,6 +225,26 @@
 	}
 </script>
 <script>
+	function GetRefs() {
+		$.ajax({
+			url: '/Account/GetUrls?=',
+			type: 'GET',
+			success: function (result) {
+				let ref1 = document.getElementById('ref1');
+				let ref2 = document.getElementById('ref2');
+
+				ref1.setAttribute('href', result.url1);
+				ref2.setAttribute('href', result.url2);
+			},
+			error: function (xhr, status, error) {
+				console.log(xhr.responseText);
+			}
+		});
+	}
+</script>
+<script>
 	CheckNotification();
 	CheckNewNotification();
+	GetRefs();
 </script>
+

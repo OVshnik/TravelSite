@@ -12,5 +12,8 @@ namespace TravelSite.Services
 		public Task<List<NotificationViewModel>> GetAllNotificationsByUserAsync(string id);
 		public Task MarkNotificationAsDeliveredAsync(Guid id);
 		public Task RemoveAllNotificationByUserAsync(string userId);
+		public Task CreateBookingNotification(Guid bookId, string userId, string bookNum,string linkedUrl);
+		public Task ConfirmBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl);
+		public Task CancelBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl);
 	}
 }

@@ -19,5 +19,7 @@ namespace TravelSite.Data.Models
 			return FirstName+" "+LastName+" "+MiddleName;
 		}
 		public List<Booking> Bookings { get; set; } = new List<Booking>();
+		public List<BookingNotification> SendNotifications { get; set; } = new List<BookingNotification>();
+		public List<BookingNotification> ReceivedNotifications { get; set; } = new List<BookingNotification>();
 	}
 }

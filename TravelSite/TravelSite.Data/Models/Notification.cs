@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,11 @@ namespace TravelSite.Data.Models
 		public string Content { get; set; } = String.Empty;
 		public DateTime Created { get; set; }= DateTime.Now;
 		public bool Delivered { get; set; }= false;
-		public string SenderId { get; set; } = String.Empty;
+		[ForeignKey("SenderId")]
+		public string? SenderId { get; set; }
 		public User? Sender { get; set; }
-		public string RecipientId { get; set; } = String.Empty;
+		[ForeignKey("RecipientId")]
+		public string? RecipientId { get; set; }
 		public User? Recipient { get; set; }
 	}
 }

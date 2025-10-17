@@ -1,4 +1,5 @@
 ﻿using TravelSite.Data.Models;
+using TravelSite.Validation;
 
 namespace TravelSite.Models.Bookings
 {

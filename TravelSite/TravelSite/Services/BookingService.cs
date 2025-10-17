@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Diagnostics;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -22,20 +23,20 @@ namespace TravelSite.Services
 		private readonly ITravelRepository _travelRepository;
 		private readonly ITravelDatesRepository _travelDatesRepository;
 		private readonly UserManager<User> _userManager;
-		private readonly INotificationRepository<BookingNotification> _notificationRepository;
+		private readonly INotificationService _notificationService;
 		public BookingService(IMapper mapper,
 			IBookingRepository bookingRepository,
 			ITravelRepository repository,
 			ITravelDatesRepository travelDatesRepository,
 			UserManager<User> User,
-			INotificationRepository<BookingNotification> notificationRepository)
+			INotificationService notificationService)
 		{
 			_mapper = mapper;
 			_bookingRepository = bookingRepository;
 			_travelRepository = repository;
 			_userManager = User;
 			_travelDatesRepository = travelDatesRepository;
-			_notificationRepository = notificationRepository;
+			_notificationService = notificationService;
 		}
 		public async Task<CreateBookingViewModel> AddBookingAsync(Guid id, ClaimsPrincipal claims)
 		{
@@ -60,7 +61,7 @@ namespace TravelSite.Services
 
 				foreach (var date in dates)
 				{
-					model.TravelDates.Add(_mapper.Map<TravelDatesViewModel>(date));
+					model.TravelDates?.Add(_mapper.Map<TravelDatesViewModel>(date));
 				}
 				return model;
 			}
@@ -69,7 +70,7 @@ namespace TravelSite.Services
 
 		public async Task<Guid> AddBookingAsync(CreateBookingViewModel model)
 		{
-			var dates = model.TravelDates.FirstOrDefault(x => x.isChecked == true);
+			var dates = model.TravelDates?.FirstOrDefault(x => x.isChecked == true);
 
 			if (dates != null && model.Travel != null)
 			{
@@ -81,9 +82,14 @@ namespace TravelSite.Services
 				var user = await _userManager.FindByIdAsync(model.UserId);
 
 				var d = await _travelDatesRepository.GetTravelDatesByIdAsync(dates.Id);
+
+				var bookings = await _bookingRepository.GetAllBookingsAsync();
+
+
 				if (d != null && user != null && travel != null)
 				{
-					if (d.AvailablePlaces != 0)
+					var checkBooking = await CheckDates(user.Id,travel.Id,d.Id);
+					if (checkBooking && d.AvailablePlaces != 0)
 					{
 						var booking = _mapper.Map<Booking>(model);
 
@@ -95,13 +101,31 @@ namespace TravelSite.Services
 						d.AvailablePlaces--;
 						await _travelDatesRepository.UpdateTravelDatesAsync(d);
 
-						await CreateNotification(booking.Id, user.Id, booking.BookingNumber);
 						return booking.Id;
-
+					}
+					else
+					{
+						throw new Exception($"Тур с этими датами уже забронирован пользователем");
 					}
 				}
 			}
 			throw new Exception($"тур с Id '{model.Travel?.Id}' не найден");
+		}
+		public async Task<bool> CheckDates(string userId, Guid travelId, Guid datesId)
+		{
+			var bookings = await _bookingRepository.GetAllBookingsAsync();
+			if (bookings != null)
+			{
+				var checkBooking = bookings.Where(x => (x.UserId == userId) &&
+												 (x.TravelId == travelId) &&
+												 (x.TravelDatesId == datesId)).FirstOrDefault();
+				if (checkBooking != null)
+				{
+					return false;
+				}
+				return true;
+			}
+			return true;
 		}
 		public async Task RemoveBookingAsync(Guid id)
 		{
@@ -148,9 +172,12 @@ namespace TravelSite.Services
 		public async Task<EditBookingViewModel> EditBookingAsync(Guid id)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
-			if (booking != null)
+			var trDates = await _travelDatesRepository.GetTravelDatesByIdAsync(booking.TravelDatesId);
+			if (booking != null && trDates != null)
 			{
-				return _mapper.Map<EditBookingViewModel>(booking);
+				var model = _mapper.Map<EditBookingViewModel>(booking);
+				model.Price = trDates.Price;
+				return model;
 			}
 			throw new Exception($"Бронирование с id'{id}'не найдено");
 
@@ -164,68 +191,6 @@ namespace TravelSite.Services
 				booking.BookingStatus = model.BookingStatus;
 				await _bookingRepository.UpdateBookingAsync(booking);
 			}
-		}
-		public async Task CreateNotification(Guid bookId, string userId, string bookNum)
-		{
-			var admins = await _userManager.GetUsersInRoleAsync("Admin");
-
-			var ids = admins.Select(x => x.Id).ToList();
-
-			var message = $"Бронирование №{bookNum} создано";
-
-			var booking = await _bookingRepository.GetBookingByIdAsync(bookId);
-			if (booking != null)
-			{
-				foreach (var id in ids)
-				{
-					var notification = new BookingNotification
-					{
-						Content = message,
-						RecipientId = id,
-						SenderId = userId,
-						BookingId = booking.Id
-					};
-					await _notificationRepository.CreateNotificationAsync(notification);
-				}
-			}
-		}
-		public async Task ConfirmBooking(Guid id, string senderId, string bookNum)
-		{
-			var booking = await _bookingRepository.GetBookingByIdAsync(id);
-			if (booking != null)
-			{
-				booking.BookingStatus = "Confirmed";
-				await _bookingRepository.UpdateBookingAsync(booking);
-				var notification = new BookingNotification
-				{
-					Content = $"Бронирование №{bookNum} подтверждено",
-					RecipientId = booking.UserId,
-					SenderId = senderId,
-					BookingId = booking.Id
-				};
-				await _notificationRepository.CreateNotificationAsync(notification);
-			}
-			else
-				throw new Exception($"Бронирование с id'{id}'не найдено");
-		}
-		public async Task CancelBooking(Guid id, string senderId, string bookNum)
-		{
-			var booking = await _bookingRepository.GetBookingByIdAsync(id);
-			if (booking != null)
-			{
-				booking.BookingStatus = "Canceled";
-				await _bookingRepository.UpdateBookingAsync(booking);
-				var notification = new BookingNotification
-				{
-					Content = $"Бронирование №{bookNum} отменено",
-					RecipientId = booking.UserId,
-					SenderId = senderId,
-					BookingId = booking.Id
-				};
-				await _notificationRepository.CreateNotificationAsync(notification);
-			}
-			else
-				throw new Exception($"Бронирование с id'{id}'не найдено");
 		}
 		public async Task<string> GenerateBookingNumber(string trName)
 		{

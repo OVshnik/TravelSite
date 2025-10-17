@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using TravelSite.Data.Models;
 using TravelSite.Models.Account;
 using TravelSite.Models.Orders;
@@ -15,9 +16,10 @@ namespace TravelSite.Models.Bookings
 		public string BookingNumber { get; set; } = "";
 		public DateOnly From {  get; set; }
 		public DateOnly To { get; set; }
+		
 		public int Price { get; set; }
-		[CheckedDatesAmount]
-		public List <TravelDatesViewModel> TravelDates { get; set; }= new List<TravelDatesViewModel>();
+		[CheckDatesAmount(1)]
+		public List <TravelDatesViewModel> ?TravelDates { get; set; }= new List<TravelDatesViewModel>();
 		public string UserId { get; set; } = "";
 		public TravelViewModel? Travel { get; set; }
 	}

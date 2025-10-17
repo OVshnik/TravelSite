@@ -11,8 +11,7 @@ namespace TravelSite.Services
 		public Task <List<BookingViewModel>> GetAllBookingAsync();
 		public Task<EditBookingViewModel> EditBookingAsync(Guid id);
 		public Task UpdateBookingAsync(EditBookingViewModel model);
-		public Task ConfirmBooking(Guid id, string senderId, string bookNum);
-		public Task CancelBooking(Guid id, string senderId, string bookNum);
+		public Task<bool> CheckDates(string userId, Guid travelId, Guid datesId);
 		public Task<string> GenerateBookingNumber(string trName);
 
 	}
