@@ -8,7 +8,7 @@ COPY . ./
 RUN dotnet publish -c release -o /TravelSite
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
+WORKDIR /TravelSite
 COPY --from=build /TravelSite ./
 
 EXPOSE 8080
