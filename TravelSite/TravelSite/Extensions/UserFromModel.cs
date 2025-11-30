@@ -1,4 +1,5 @@
-﻿using TravelSite.Data.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TravelSite.Data.Models;
 using TravelSite.Models.Account;
 
 namespace TravelSite.Extensions
@@ -27,6 +28,10 @@ namespace TravelSite.Extensions
 			if (!string.IsNullOrEmpty(viewModel.UserName))
 			{
 				user.UserName = viewModel.UserName;
+			}
+			if (!string.IsNullOrEmpty(viewModel.EmailKey))
+			{
+				user.EmailKey = HT.Core.CryptExtensions.Encrypt(viewModel.EmailKey);
 			}
 			return user;
 		}

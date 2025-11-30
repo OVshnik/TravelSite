@@ -12,12 +12,14 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using TravelSite.Notifications;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connection = builder.Configuration.GetConnectionString("VPSConnection");
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -55,7 +57,7 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
-{
+{ 
 	options.LoginPath = "/Login";
 	options.AccessDeniedPath = "/Login";
 });

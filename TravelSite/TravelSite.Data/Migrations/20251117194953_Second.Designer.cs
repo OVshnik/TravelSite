@@ -12,8 +12,8 @@ using TravelSite.Data;
 namespace TravelSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250811193414_Sixth")]
-    partial class Sixth
+    [Migration("20251117194953_Second")]
+    partial class Second
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,6 +140,10 @@ namespace TravelSite.Data.Migrations
                     b.Property<DateTime>("BookDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BookingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BookingStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -162,14 +166,49 @@ namespace TravelSite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TravelDatesId")
-                        .IsUnique();
+                    b.HasIndex("TravelDatesId");
 
                     b.HasIndex("TravelId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("TravelSite.Data.Models.BookingNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Delivered")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("BookingNotification");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.Order", b =>
@@ -357,6 +396,10 @@ namespace TravelSite.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("EmailKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -474,8 +517,8 @@ namespace TravelSite.Data.Migrations
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.TravelDates", "TravelDates")
-                        .WithOne("Booking")
-                        .HasForeignKey("TravelSite.Data.Models.Booking", "TravelDatesId")
+                        .WithMany("Bookings")
+                        .HasForeignKey("TravelDatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -496,6 +539,29 @@ namespace TravelSite.Data.Migrations
                     b.Navigation("TravelDates");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TravelSite.Data.Models.BookingNotification", b =>
+                {
+                    b.HasOne("TravelSite.Data.Models.Booking", "Booking")
+                        .WithMany("BookingNotifications")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TravelSite.Data.Models.User", "Recipient")
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("RecipientId");
+
+                    b.HasOne("TravelSite.Data.Models.User", "Sender")
+                        .WithMany("SendNotifications")
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.Order", b =>
@@ -551,6 +617,8 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
+                    b.Navigation("BookingNotifications");
+
                     b.Navigation("Order");
                 });
 
@@ -569,12 +637,16 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.TravelDates", b =>
                 {
-                    b.Navigation("Booking");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.User", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("ReceivedNotifications");
+
+                    b.Navigation("SendNotifications");
                 });
 #pragma warning restore 612, 618
         }

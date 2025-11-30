@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Esf;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using TravelSite.Data.Models;
 using TravelSite.Extensions;
@@ -159,6 +157,10 @@ namespace TravelSite.Services
 
 		public async Task<IdentityResult> Register(RegisterViewModel model)
 		{
+			if (!model.EmailKey.IsNullOrEmpty())
+			{
+				model.EmailKey = HT.Core.CryptExtensions.Encrypt(model.EmailKey);
+			}
 			var user = _mapper.Map<User>(model);
 			var result = await _userManager.CreateAsync(user, model.PasswordReg);
 			if (result.Succeeded)

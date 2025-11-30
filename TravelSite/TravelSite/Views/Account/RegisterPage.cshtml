@@ -3,21 +3,29 @@
 	ViewData["Title"] = "Register";
 }
 @model RegisterViewModel
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.tutorialjinni.com/font-awesome/6.6.0/js/fontawesome.js"></script>
+<script src="~/lib/datepicker-bs4/datepicker-bs4.js"></script>
+
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.css">
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
 
 <link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css"> *@
 
 <label class="fs-5 mb-1">Регистрация нового пользователя</label>
+
+@{
+	var maxDate = DateTime.UtcNow.Date.AddYears(-18).AddDays(-1);
+	var minDate = DateTime.UtcNow.Date.AddYears(-100).AddDays(-1);
+}
 
 @if (User.IsInRole("Admin"))
 {
@@ -72,12 +80,15 @@
 		</div>
 		<label for="inputDate" class="form-label">Дата рождения</label>
 		<div class="mb-3">
-			<input asp-for="BirthDate" class="form-control" type="date" class="form-control" id="date" style="max-width:fit-content" onekeydown="event.preventDefault()" />
-			<span class="input-group-addon">
-				<span class="glyphicon-calendar glyphicon">
-				</span>
-			</span>
+			<input asp-for="BirthDate" class="form-control" value="@maxDate.AddYears(-10).ToString("yyyy-MM-dd")" type="date" min="@minDate.ToString("yyyy-MM-dd")" max="@maxDate.ToString("yyyy-MM-dd")" id="date" style="max-width:fit-content" />
 			<span asp-validation-for="BirthDate" class="text-danger"></span>
+		</div>
+		<label class="form-label">Ключ для почты</label>
+		<div>
+			<div class="mb-3">
+				<input asp-for="EmailKey" class="form-control" />
+				<span asp-validation-for="EmailKey" class="text-danger"></span>
+			</div>
 		</div>
 		<div>
 			<input class="btn btn-success" type="submit" value="Зарегистрироваться" />
@@ -120,11 +131,7 @@ else
 		</div>
 		<label for="inputDate" class="form-label">Дата рождения</label>
 		<div class="mb-3">
-			<input asp-for="BirthDate" class="form-control" type="text" class="form-control" id="date" onekeydown="event.preventDefault()" />
-			<span class="input-group-addon">
-				<span class="glyphicon-calendar glyphicon">
-				</span>
-			</span>
+			<input asp-for="BirthDate" class="form-control" value="@maxDate.AddYears(-10).ToString("yyyy-MM-dd")" type="date" min="@minDate.ToString("yyyy-MM-dd")" max="@maxDate.ToString("yyyy-MM-dd")" id="date" style="max-width:fit-content" />
 			<span asp-validation-for="BirthDate" class="text-danger"></span>
 		</div>
 		<div>
@@ -132,20 +139,22 @@ else
 		</div>
 	</form>
 }
-<script>
-	$(function () {
 
-		$(function () {
-			let maxDay = new Date().getDate();
-			let maxMonth = new Date().getMonth() + 1;
-			let maxYear = new Date().getFullYear();
-			let fullDate = `${maxYear}/${maxMonth}/${maxDay}`;
-			$('#date').datetimepicker({
-				locale: 'ru',
-				stepping: 10,
-				format: 'DD.MM.YYYY',
-				maxDate: fullDate,
-			});
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@* <script>
+	$(document).ready(function () {
+		$('#date').datepicker({
+			minDate: '1900-01-01',
+			maxDate: null,
+			format: 'MM/DD/YYYY',
+			// popoverWidth: '100%',
+			startView: 'day',
+			scheme: 'light',
 		});
 	});
-</script>
+</script> *@

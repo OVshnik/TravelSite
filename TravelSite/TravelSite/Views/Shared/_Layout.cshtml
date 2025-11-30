@@ -4,6 +4,10 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - TravelSite</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<link rel="stylesheet" href="~/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/TravelSite.styles.css" asp-append-version="true" />
@@ -59,7 +63,6 @@
 						</div>
 						<ul class="navbar-nav align-items-center">
 							<li class="nav-item">
-
 								<div class="dropdown">
 									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 										@User.Identity.Name
@@ -71,14 +74,14 @@
 										<li>
 											<a class="dropdown-item" asp-area="" asp-controller="Booking" asp-action="GetAllBooking">Бронирования</a>
 										</li>
-@* 										<li>
-											<a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="GetAllOrders">Заказы</a>
-										</li> *@
-										@if(User.IsInRole("Admin"))
+										@* 										<li>
+									<a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="GetAllOrders">Заказы</a>
+									</li> *@
+										@if (User.IsInRole("Admin"))
 										{
-										<li>
-											<a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="AdminSettings">Настройки</a>
-										</li>
+											<li>
+												<a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="AdminSettings">Настройки</a>
+											</li>
 										}
 										<li>
 											<form asp-area="" asp-action="Logout" asp-controller="Account">
@@ -100,12 +103,28 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Туры</a>
 							</li>
-						</ul>
-					</div>
-					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-						<ul class="navbar-nav flex-grow-1">
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Travel" asp-action="GetAllTravels">Помощь</a>
+							</li>
+							<li>
+								@{
+									var search = "";
+								}
+								<form asp-area="" asp-action="SearchTravel" asp-controller="Travel" class="d-flex mx-5" method="post">
+									<input asp-for="@search" class="form-control me-2 " type="text" placeholder="Поиск" aria-label="Search">
+									<button class="btn btn-outline-success" type="submit">Поиск</button>
+								</form>
+							</li>
+						</ul>
+						<ul class="navbar-nav align-items-center">
+							<li class="nav-item">
+								<div class="dropdown">
+									<form asp-area="" asp-action="Login" asp-controller="Account">
+										<button type="submit" class="btn btn-secondary">
+											Войти
+										</button>
+									</form>
+								</div>
 							</li>
 						</ul>
 					</div>
@@ -124,22 +143,19 @@
 		</div>
 		<div class="container d-inline-block" style="width:50px; height:auto; padding-right:0">
 			<a id="ref1" href="">
-				<img src="~/whatsapp.svg" width="100%" height="auto"/>
+				<img src="~/whatsapp.svg" width="100%" height="auto" />
 			</a>
 		</div>
 		<div class="container d-inline-block" style="width:50px; height:auto; padding-left:0">
 			<a id="ref2" href="">
-				<img src="~/telegram.svg" width="100%" height="auto"/>
+				<img src="~/telegram.svg" width="100%" height="auto" />
 			</a>
 		</div>
 	</footer>
-	@* 	@await RenderSectionAsync("Scripts", required: false) *@
+	@* 		@await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.14/signalr.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 <script>
 	async function CheckNotification() {

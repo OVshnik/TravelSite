@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>ccc101cc-227e-4100-b917-fbe7ad92b3bf</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
     <PackageReference Include="Bootstrap.v3.Datetimepicker" Version="4.17.49" />
     <PackageReference Include="Bootstrap.v3.Datetimepicker.CSS" Version="4.17.49" />
     <PackageReference Include="GleamTech.FileUltimate" Version="9.6.4" />
+    <PackageReference Include="HT.Encrypt" Version="7.0.2" />
     <PackageReference Include="jQuery" Version="3.7.1" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
@@ -35,7 +37,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
     <PackageReference Include="Moment.js" Version="2.30.1" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\TravelSite.Data\TravelSite.Data.csproj" />
   </ItemGroup>

@@ -33,8 +33,7 @@ namespace TravelSite.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Video = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,7 +118,45 @@ namespace TravelSite.Data.Migrations
                         column: x => x.TravelId,
                         principalTable: "Travels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TravelPhoto",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TravelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TravelPhoto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TravelPhoto_Travels_TravelId",
+                        column: x => x.TravelId,
+                        principalTable: "Travels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TravelVideo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TravelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TravelVideo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TravelVideo_Travels_TravelId",
+                        column: x => x.TravelId,
+                        principalTable: "Travels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,6 +249,7 @@ namespace TravelSite.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BookingStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TravelDatesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -240,6 +278,39 @@ namespace TravelSite.Data.Migrations
                         column: x => x.TravelId,
                         principalTable: "Travels",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookingNotification",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Delivered = table.Column<bool>(type: "bit", nullable: false),
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RecipientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingNotification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookingNotification_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BookingNotification_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BookingNotification_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -248,6 +319,7 @@ namespace TravelSite.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -309,10 +381,24 @@ namespace TravelSite.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookingNotification_BookingId",
+                table: "BookingNotification",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookingNotification_RecipientId",
+                table: "BookingNotification",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookingNotification_SenderId",
+                table: "BookingNotification",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_TravelDatesId",
                 table: "Bookings",
-                column: "TravelDatesId",
-                unique: true);
+                column: "TravelDatesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_TravelId",
@@ -333,6 +419,16 @@ namespace TravelSite.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TravelDates_TravelId",
                 table: "TravelDates",
+                column: "TravelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TravelPhoto_TravelId",
+                table: "TravelPhoto",
+                column: "TravelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TravelVideo_TravelId",
+                table: "TravelVideo",
                 column: "TravelId");
         }
 
@@ -355,7 +451,16 @@ namespace TravelSite.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BookingNotification");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "TravelPhoto");
+
+            migrationBuilder.DropTable(
+                name: "TravelVideo");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

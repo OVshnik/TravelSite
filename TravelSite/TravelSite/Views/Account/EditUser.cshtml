@@ -5,54 +5,42 @@
 }
 @model UserEditViewModel
 
-
 <link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
-
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.tutorialjinni.com/font-awesome/6.6.0/js/fontawesome.js"></script>
+<script src="~/lib/datepicker-bs4/datepicker-bs4.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-
-
 <label class="fs-5 mb-1">Редактирование пользователя</label>
-
+@{
+	var maxDate = DateTime.UtcNow.Date.AddYears(-18).AddDays(-1);
+	var minDate = DateTime.UtcNow.Date.AddYears(-100).AddDays(-1);
+}
 <form class="frm" method="post" asp-controller="Account" asp-action="UpdateUser">
 	<div asp-validation-summary="ModelOnly"></div>
 	@if (Model is not null)
 	{
 		@for (int i = 0; i < Model.Roles.Count; i++)
 		{
-			@if (User.IsInRole("Admin") || User.IsInRole("UberAdmin"))
+			@if (User.IsInRole("Admin"))
 			{
 				<p class="form-check-inline">
-
-					@if (Model.Roles[i].Name != "User")
-					{
-						<td>
-							@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new
-								{
-									@class = "form-check-input m-1",
-									@id = $"{Model.Roles[i].Id}"
-								})
-							<lable class="tag-margin">@Model.Roles[i].Name</lable>
-							@Html.HiddenFor(model => model.Roles[i].Id)
-							@Html.HiddenFor(model => model.Roles[i].Name)
-						</td>
-					}
-					else
-					{
-						@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class = "form-check-input m-1", @checked = "checked", @disabled = "disabled" })
-						<lable for="user" class="tag-margin">@Model.Roles[i].Name</lable>
+					<td>
+						@Html.CheckBoxFor(model => model.Roles[i].IsChecked, new
+							{
+								@class = "form-check-input m-1",
+								@id = $"{Model.Roles[i].Id}"
+							})
+						<lable class="tag-margin">@Model.Roles[i].Name</lable>
 						@Html.HiddenFor(model => model.Roles[i].Id)
 						@Html.HiddenFor(model => model.Roles[i].Name)
-					}
+					</td>
 				</p>
 			}
-
 		}
 	}
 	<div>
@@ -72,11 +60,7 @@
 			<span asp-validation-for="MiddleName" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
-			<input asp-for="BirthDate" class="form-control" type="date" class="form-control" id="date" style="max-width:fit-content" onekeydown="event.preventDefault()" />
-			<span class="input-group-addon">
-				<span class="glyphicon-calendar glyphicon">
-				</span>
-			</span>
+			<input asp-for="BirthDate" class="form-control"  type="date" min="@minDate.ToString("yyyy-MM-dd")" max="@maxDate.ToString("yyyy-MM-dd")" id="date" style="max-width:fit-content" />
 			<span asp-validation-for="BirthDate" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
@@ -87,25 +71,28 @@
 			<input asp-for="Password" class="form-control">
 			<span asp-validation-for="Password" class="text-danger"></span>
 		</div>
+		<label class="form-label">Ключ для почты</label>
+		@if (User.IsInRole("Admin"))
+		{
+			<div class="mb-3">
+				<input asp-for="EmailKey" class="form-control" />
+				<span asp-validation-for="EmailKey" class="text-danger"></span>
+			</div>
+		}
 	</div>
 	<div>
 		<input class="btn btn-success" type="submit" value="Сохранить" />
 	</div>
 </form>
-<script>
-	$(function () {
-
-		$(function () {
-			let maxDay = new Date().getDate();
-			let maxMonth = new Date().getMonth() + 1;
-			let maxYear = new Date().getFullYear();
-			let fullDate = `${maxYear}/${maxMonth}/${maxDay}`;
-			$('#date').datetimepicker({
-				locale: 'ru',
-				stepping: 10,
-				format: 'DD.MM.YYYY',
-				maxDate: fullDate,
-			});
+@* <script>
+	$(document).ready(function () {
+		$('#date').datepicker({
+			minDate: '1900-01-01',
+			maxDate: null,
+			format: 'MM/DD/YYYY',
+			// popoverWidth: '100%',
+			startView: 'day',
+			scheme: 'light',
 		});
 	});
-</script>
+</script> *@

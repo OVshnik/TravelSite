@@ -48,12 +48,15 @@ namespace TravelSite.Services
 				await _notificationRepository.CreateNotificationAsync(notification);
 				message = message + $"\n Перейти {linkedUrl}";
 				var sender = await _userManager.FindByIdAsync(userId);
-				await _emailService.SendEmailAsync(admin.Email, sender.Email, "nnnl vaei vqyv anmp", message, bookNum);
+				var emailPass= HT.Core.CryptExtensions.Decrypt(admin.EmailKey);
+
+				await _emailService.SendEmailAsync(admin.Email, admin.Email, emailPass, message, bookNum);
 			}
 		}
 		public async Task ConfirmBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
+
 			if (booking != null)
 			{
 				booking.BookingStatus = "Confirmed";
@@ -69,7 +72,12 @@ namespace TravelSite.Services
 				await _notificationRepository.CreateNotificationAsync(notification);
 				message = message+$"\n Перейти {linkedUrl}";
 				var recipient = await _userManager.FindByIdAsync(booking.UserId);
-				await _emailService.SendEmailAsync(recipient.Email, recipient.Email, "nnnl vaei vqyv anmp", message, bookNum);
+
+				var sender = await _userManager.FindByIdAsync(senderId);
+
+				var emailPass = HT.Core.CryptExtensions.Decrypt(sender?.EmailKey);
+
+				await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
 			}
 			else
 				throw new Exception($"Бронирование с id'{id}'не найдено");
@@ -77,6 +85,7 @@ namespace TravelSite.Services
 		public async Task CancelBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
+
 			if (booking != null)
 			{
 				booking.BookingStatus = "Canceled";
@@ -93,7 +102,10 @@ namespace TravelSite.Services
 				message = message + $"\n Перейти {linkedUrl}";
 				var recipient = await _userManager.FindByIdAsync(booking.UserId);
 				var sender = await _userManager.FindByIdAsync(senderId);
-				await _emailService.SendEmailAsync(recipient.Email, sender.Email, "nnnl vaei vqyv anmp", message, bookNum);
+
+				var emailPass = HT.Core.CryptExtensions.Decrypt(sender?.EmailKey);
+
+				await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
 			}
 			else
 				throw new Exception($"Бронирование с id'{id}'не найдено");

@@ -14,6 +14,7 @@ namespace TravelSite.Data.Models
 		public string LastName { get; set; }=string.Empty;
 		public string MiddleName { get; set; }=string.Empty;
 		public DateTime BirthDate { get; set; }=DateTime.Now;
+		public string ?EmailKey {  get; set; }
 		public string GetFullName()
 		{
 			return FirstName+" "+LastName+" "+MiddleName;

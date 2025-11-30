@@ -25,12 +25,12 @@ namespace TravelSite.Controllers
 		public async Task<IActionResult> PrepareAddBooking(Guid id)
 		{
 			var user = User;
-			if (user != null)
+			if (user != null && User.Identity.IsAuthenticated)
 			{
 				var model = await _bookingService.AddBookingAsync(id, user);
 				return View("AddBooking", model);
 			}
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("Login", "Account");
 		}
 		[HttpPost]
 		[Route("AddBooking")]

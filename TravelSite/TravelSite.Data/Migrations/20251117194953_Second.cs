@@ -5,14 +5,14 @@
 namespace TravelSite.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class _10th : Migration
+    public partial class Second : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "BookingNumber",
-                table: "Bookings",
+                name: "EmailKey",
+                table: "AspNetUsers",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -22,8 +22,8 @@ namespace TravelSite.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "BookingNumber",
-                table: "Bookings");
+                name: "EmailKey",
+                table: "AspNetUsers");
         }
     }
 }

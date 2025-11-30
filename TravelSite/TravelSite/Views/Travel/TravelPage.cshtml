@@ -16,9 +16,6 @@
 	<div>
 		<label class="card-text fst-italic" style="display:grid; justify-self:center">@Model.Category</label>
 	</div>
-	<div>
-		<label class="card-text fst-italic" style="display:grid; justify-self:center">@Model.Description</label>
-	</div>
 	@if (Model.PhotoGallery.Count > 0)
 	{
 		<div class="swiper mb-2  " style="border-radius:20px; width:800px; height:auto; align-items:center">
@@ -35,7 +32,7 @@
 			<div class="swiper-button-prev" style="color:#7c858f"></div>
 		</div>
 	}
-	else 
+	else
 	{
 		<div class="text-center">
 			<img style="align-content:center; border-radius:5px" width="50%" height="auto" src="@Model.Photo" />
@@ -52,6 +49,9 @@
 			}
 		</div>
 	}
+	<div>
+		<p style="white-space: pre-line">@Model.Description</p>
+	</div>
 	<div style="display:inline-block; justify-self:center">
 		@if (User.IsInRole("Admin"))
 		{
@@ -76,6 +76,25 @@
 				Забронировать
 			</button>
 		</form>
+		@* 			<div>
+		<label>
+		Чтобы забронировать тур необходимо войти в личный кабинет, или зарегистрироваться
+		</label>
+		</div>
+		<div class="d-inline-block">
+		<form method="get" class="d-inline" asp-area="" asp-route-id="" asp-controller="Account" asp-action="Login">
+		<input asp-for="Id" hidden />
+		<button class="btn btn-outline-dark mb-1" type="submit">
+		Войти
+		</button>
+		</form>
+		<form method="get" class="d-inline" asp-area="" asp-controller="Account" asp-action="Register">
+		<input asp-for="Id" hidden />
+		<button class="btn btn-outline-dark mb-1" type="submit">
+		Зарегистрироваться
+		</button>
+		</form>
+		</div> *@
 	</div>
 </div>
 

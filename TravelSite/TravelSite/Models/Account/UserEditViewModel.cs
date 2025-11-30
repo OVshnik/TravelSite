@@ -32,9 +32,12 @@ namespace TravelSite.Models.Account
 		[Required(ErrorMessage = "Поле Пароль обязательно для заполнения")]
 		[DataType(DataType.Password)]
 		[Display(Name = "Пароль", Prompt = "12345")]
-		[StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 10)]
+		[StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 5)]
 		public string Password { get; set; } = string.Empty;
-
+		[DataType(DataType.Password)]
+		[Display(Name = "Ключ для почты", Prompt = "Q2F4-1D3C-12A4-1V34")]
+		[StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 10)]
+		public string ?EmailKey { get; set; }
 		public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
 	}
 }

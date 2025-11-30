@@ -103,3 +103,12 @@ dkms.conf
 /TravelSite/TravelSite/wwwroot/uploads/photo/Тбилиси_o3xxg3uw.ukg.jpg
 /TravelSite/TravelSite/wwwroot/uploads/photo/Тбилиси_rj5glbpg.4of.jpg
 /TravelSite/TravelSite/wwwroot/uploads/video/Грузия_s4o4qyim.dry.mp4
+/TravelSite/obj/Debug
+/TravelSite/obj/Docker
+/TravelSite/TravelSite/bin/Debug/net8.0/TravelSite.staticwebassets.runtime.CT.json
+/TravelSite/Dockerfile
+/TravelSite/docker-compose.dcproj
+/TravelSite/docker-compose.yml
+/TravelSite/TravelSite/bin/Release/net8.0/appsettings.Development.json
+/TravelSite/TravelSite/bin/Debug/net8.0/appsettings.Development.json
+/TravelSite/TravelSite/appsettings.Development.json

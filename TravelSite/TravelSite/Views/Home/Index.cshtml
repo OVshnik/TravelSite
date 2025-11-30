@@ -13,17 +13,23 @@
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/site.css">
 
-@if (SignInManager.IsSignedIn(User))
-{
-	if (Model.Travels is not null)
+	@if (Model.Travels is not null)
 	{
 		<div class="px-5">
 			<label class="fs-2">
 				Уникальные экскурсии по невероятным местам
 			</label>
 			<div>
-				bsdbsgbsfgbsgfbsgsgfdfsvsjhdfbkjhdsfbvjhkdsbvhkjfdbavhkjbafdhvjbakjvbdsfb a fds fb bf b akf 
-				kjsfdkg jkfjg jgskg nkdsjgnkjsngk jnskgdjns dkjgskdjgskdjgksjdngkdsjgnksjngkjns jkg s
+				Почему мы?
+				Мы - команда энтузиастов, увлеченных путешествиями, историей и культурой древних народов.
+				Странствуя по миру, нам повезло  оказаться в затерянном и безумно прекрасных  уголках Грузии -
+				это буквально  земля под небесами сакральная и закрытая.
+				Мы хотим открыть эту сокровищницу вам:
+				исследовать связь истории и древней культуры шумеров,
+				созерцать красоту природы и соединяться с первородными энергиями места,
+				погружаться в медитации и практики
+				в дружеской атмосфере наслаждаться путешествием и обретать единомышленников.
+				С нами вы сможете почувствовать  себя настоящими и раскрыть источник силы внутри
 			</div>
 		</div>
 		<div style="width: 90%;margin: 2rem auto;">
@@ -44,10 +50,3 @@
 			</div>
 		</div>
 	}
-}
-else
-{
-	<div class="">
-		<partial name="Login" model="Model.LoginViewModel" />
-	</div>
-}

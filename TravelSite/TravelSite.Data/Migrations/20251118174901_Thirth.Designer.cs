@@ -12,8 +12,8 @@ using TravelSite.Data;
 namespace TravelSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251003143630_17th")]
-    partial class _17th
+    [Migration("20251118174901_Thirth")]
+    partial class Thirth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -166,8 +166,7 @@ namespace TravelSite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TravelDatesId")
-                        .IsUnique();
+                    b.HasIndex("TravelDatesId");
 
                     b.HasIndex("TravelId");
 
@@ -182,7 +181,7 @@ namespace TravelSite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookingId")
+                    b.Property<Guid>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
@@ -397,6 +396,9 @@ namespace TravelSite.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("EmailKey")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -514,8 +516,8 @@ namespace TravelSite.Data.Migrations
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.TravelDates", "TravelDates")
-                        .WithOne("Booking")
-                        .HasForeignKey("TravelSite.Data.Models.Booking", "TravelDatesId")
+                        .WithMany("Bookings")
+                        .HasForeignKey("TravelDatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,7 +544,9 @@ namespace TravelSite.Data.Migrations
                 {
                     b.HasOne("TravelSite.Data.Models.Booking", "Booking")
                         .WithMany("BookingNotifications")
-                        .HasForeignKey("BookingId");
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TravelSite.Data.Models.User", "Recipient")
                         .WithMany("ReceivedNotifications")
@@ -632,7 +636,7 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.TravelDates", b =>
                 {
-                    b.Navigation("Booking");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.User", b =>

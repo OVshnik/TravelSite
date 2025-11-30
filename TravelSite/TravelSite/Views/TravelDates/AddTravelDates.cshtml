@@ -42,23 +42,13 @@
 	</div>
 	<div>
 		<div class="mb-3">
-			<label class="fs-7">Дата начала</label>
-			<input asp-for="From" class="form-control" type="date" class="form-control" id="date" onekeydown="event.preventDefault()" />
-			<span class="input-group-addon">
-				<span class="glyphicon-calendar glyphicon">
-				</span>
-			</span>
+			<label class="text-dark-emphasis">Дата отправления</label>
+			<input asp-for="From" class="form-control" style="max-width:fit-content" type="date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" />
 			<span asp-validation-for="From" class="text-danger"></span>
 		</div>
-	</div>
-	<div>
 		<div class="mb-3">
-			<label class="fs-7">Дата окончания</label>
-			<input asp-for="To" class="form-control" type="date" class="form-control" id="date" onekeydown="event.preventDefault()" />
-			<span class="input-group-addon">
-				<span class="glyphicon-calendar glyphicon">
-				</span>
-			</span>
+			<label class="text-dark-emphasis">Дата возвращения</label>
+			<input asp-for="To" class="form-control" style="max-width:fit-content" type="date" value="@DateTime.UtcNow.Date.ToString("yyyy-MM-dd")" />
 			<span asp-validation-for="To" class="text-danger"></span>
 		</div>
 	</div>

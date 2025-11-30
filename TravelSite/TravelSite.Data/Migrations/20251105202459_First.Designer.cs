@@ -12,8 +12,8 @@ using TravelSite.Data;
 namespace TravelSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250903162325_7th")]
-    partial class _7th
+    [Migration("20251105202459_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,6 +140,10 @@ namespace TravelSite.Data.Migrations
                     b.Property<DateTime>("BookDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BookingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BookingStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -162,8 +166,7 @@ namespace TravelSite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TravelDatesId")
-                        .IsUnique();
+                    b.HasIndex("TravelDatesId");
 
                     b.HasIndex("TravelId");
 
@@ -188,18 +191,18 @@ namespace TravelSite.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Delivered")
+                        .HasColumnType("bit");
+
                     b.Property<string>("RecipientId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SenderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookingId")
-                        .IsUnique();
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("RecipientId");
 
@@ -510,8 +513,8 @@ namespace TravelSite.Data.Migrations
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.TravelDates", "TravelDates")
-                        .WithOne("Booking")
-                        .HasForeignKey("TravelSite.Data.Models.Booking", "TravelDatesId")
+                        .WithMany("Bookings")
+                        .HasForeignKey("TravelDatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -537,22 +540,18 @@ namespace TravelSite.Data.Migrations
             modelBuilder.Entity("TravelSite.Data.Models.BookingNotification", b =>
                 {
                     b.HasOne("TravelSite.Data.Models.Booking", "Booking")
-                        .WithOne("BookingNotification")
-                        .HasForeignKey("TravelSite.Data.Models.BookingNotification", "BookingId")
+                        .WithMany("BookingNotifications")
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TravelSite.Data.Models.User", "Recipient")
-                        .WithMany()
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("RecipientId");
 
                     b.HasOne("TravelSite.Data.Models.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("SendNotifications")
+                        .HasForeignKey("SenderId");
 
                     b.Navigation("Booking");
 
@@ -614,7 +613,7 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.Booking", b =>
                 {
-                    b.Navigation("BookingNotification");
+                    b.Navigation("BookingNotifications");
 
                     b.Navigation("Order");
                 });
@@ -634,12 +633,16 @@ namespace TravelSite.Data.Migrations
 
             modelBuilder.Entity("TravelSite.Data.Models.TravelDates", b =>
                 {
-                    b.Navigation("Booking");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("TravelSite.Data.Models.User", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("ReceivedNotifications");
+
+                    b.Navigation("SendNotifications");
                 });
 #pragma warning restore 612, 618
         }

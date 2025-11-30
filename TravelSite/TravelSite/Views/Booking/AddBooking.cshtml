@@ -141,6 +141,9 @@ else
 	function checkElement(i, userId, travelId, dateId) {
 		let k = 0;
 		let check = document.querySelector(`#tr${i}`);
+		let btn = document.getElementById('confirmBtn');
+		console.log("checkElemWork");
+		CheckDates(userId, travelId, dateId);
 		if (check.checked) {
 			while (k < @Model.TravelDates.Count) {
 				if (k != i) {
@@ -152,13 +155,13 @@ else
 			};
 		}
 		else {
+			btn.disabled = "";
 			while (k < @Model.TravelDates.Count) {
 				if (k != i) {
 					let item = document.querySelector(`#tr${k}`);
 					item.disabled = "";
 					let elem = document.getElementById('alert');
 					elem.hidden = true;
-					let btn = document.getElementById('confirmBtn');
 					btn.disabled = "disabled";
 				}
 				k++;
@@ -174,6 +177,7 @@ else
 			data: "userId=" + userId + "&travelId=" + travelId + "&datesId=" + datesId,
 			async: true,
 			success: function (result) {
+				console.log("checkDatesWork");
 				let elem = document.getElementById('alert');
 				let btn = document.getElementById('confirmBtn');
 				if (!result) {

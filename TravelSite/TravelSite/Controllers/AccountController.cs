@@ -60,7 +60,7 @@ namespace TravelSite.Controllers
 					ModelState.AddModelError("", "Неправильный логин и (или) пароль");
 				}
 			}
-			return View("Login");
+			return RedirectToAction("Login",new {});
 		}
 		[Route("Register")]
 		[HttpGet]
@@ -175,7 +175,6 @@ namespace TravelSite.Controllers
 				return RedirectToAction("EditUser");
 			}
 		}
-
 		[Authorize("Admin")]
 		[Route("DeleteUser")]
 		[HttpPost]

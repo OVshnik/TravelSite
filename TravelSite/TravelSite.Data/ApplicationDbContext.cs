@@ -4,7 +4,6 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using TravelSite.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection.Emit;
-using TravelSite.Data.Migrations;
 
 namespace TravelSite.Data
 {
@@ -22,14 +21,14 @@ namespace TravelSite.Data
 		}
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
 		{
-			//if (Database.GetPendingMigrations().Any())
-			//{
-				//Database.Migrate();
-			//}
-			//else
-			//{
-			//	Database.EnsureCreated();
-			//}
+			if (Database.GetPendingMigrations().Any())
+			{
+				Database.Migrate();
+			}
+			else
+			{
+				Database.EnsureCreated();
+			}
 		}
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
