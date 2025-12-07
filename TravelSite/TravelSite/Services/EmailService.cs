@@ -6,6 +6,9 @@ namespace TravelSite.Services
 {
 	public class EmailService : IEmailService
 	{
+		/// <summary>
+		/// Метод для отправки уведомления по email
+		/// </summary>
 		public async Task SendEmailAsync(string recipientEmail, string senderEmail, string password,string message, string subject)
 		{
 			using var emailMessage = new MimeMessage();

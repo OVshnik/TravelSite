@@ -32,6 +32,9 @@ namespace TravelSite.Services
 			_fileService = fileService;
 			_videoRepository = videoRepository;
 		}
+		/// <summary>
+		/// Метод для добавления тура
+		/// </summary>
 		public async Task AddTravelAsync(CreateTravelViewModel model)
 		{
 			var travel = _mapper.Map<Travel>(model);
@@ -89,6 +92,9 @@ namespace TravelSite.Services
 				}
 			}
 		}
+		/// <summary>
+		/// Метод для создания модели редактирования тура 
+		/// </summary>
 		public async Task<EditTravelViewModel> EditTravelAsync(Guid id)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(id);
@@ -120,6 +126,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception(@"Данный ""тур"" не найден в БД");
 		}
+		/// <summary>
+		/// Метод для обновления данных тура
+		/// </summary>
 		public async Task UpdateTravelAsync(EditTravelViewModel model)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(model.Id);
@@ -197,6 +206,9 @@ namespace TravelSite.Services
 				await _travelRepository.UpdateTravelAsync(updTravel);
 			}
 		}
+		/// <summary>
+		/// Метод для получения всех туров
+		/// </summary>
 		public async Task<List<TravelViewModel>> GetAllTravelAsync()
 		{
 			var travels = await _travelRepository.GetAllTravelsAsync();
@@ -227,6 +239,9 @@ namespace TravelSite.Services
 			}
 			return listTravels;
 		}
+		/// <summary>
+		/// Метод для тура по id
+		/// </summary>
 		public async Task<TravelViewModel> GetTravelAsync(Guid id)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(id);
@@ -259,7 +274,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception(@$"""Тур"" с id {id} не найден");
 		}
-
+		/// <summary>
+		/// Метод для удаления тура по id
+		/// </summary>
 		public async Task RemoveTravelAsync(Guid id)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(id);
@@ -283,6 +300,9 @@ namespace TravelSite.Services
 				}
 			}
 		}
+		/// <summary>
+		/// Метод для осуществления поиска по турам
+		/// </summary>
 		public async Task<List<TravelViewModel>> CreateSearch(string search)
 		{
 			var model = new List<TravelViewModel>();

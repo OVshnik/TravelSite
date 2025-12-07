@@ -30,7 +30,9 @@ namespace TravelSite.Services
 			_mapper = mapper;
 			_fileService = fileService;
 		}
-	
+		/// <summary>
+		/// Метод для удаления пользователя
+		/// </summary>
 		public async Task<IdentityResult> DeleteUserAsync(string id)
 		{
 			var user= await _userManager.FindByIdAsync(id);
@@ -41,7 +43,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Пользователя с id={id} не удалось получить из БД");
 		}
-
+		/// <summary>
+		/// Метод для создания модели редактирования данных пользователя
+		/// </summary>
 		public async Task<UserEditViewModel> EditUser(ClaimsPrincipal claims)
 		{
 			var user=await _userManager.GetUserAsync(claims);
@@ -55,7 +59,9 @@ namespace TravelSite.Services
 			}
 			return model;
 		}
-
+		/// <summary>
+		/// Метод для создания модели редактирования данных пользователя
+		/// </summary>
 		public async Task<UserEditViewModel> EditUser(string id)
 		{
 			var user=await _userManager.FindByIdAsync(id);
@@ -85,7 +91,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Пользователя с id={id} не удалось получить из БД");
 		}
-
+		/// <summary>
+		/// Метод для создания модели списка пользователей
+		/// </summary>
 		public async Task<List<UserViewModel>> GetAllUsersAsync()
 		{
 			var users= await _userManager.Users.AsQueryable().Include(x => x.Bookings).ToListAsync();
@@ -101,7 +109,9 @@ namespace TravelSite.Services
 			}
 			return listUsers;
 		}
-
+		/// <summary>
+		/// Метод для получения модели текущего пользователя
+		/// </summary>
 		public async Task<UserViewModel> GetCurrentUserAsync(ClaimsPrincipal claims)
 		{
 			var user = await _userManager.GetUserAsync(claims);
@@ -113,7 +123,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Пользователя с именем {claims.Identity?.Name} не удалось получить из БД");
 		}
-
+		/// <summary>
+		/// Метод для получения модели пользователя по id
+		/// </summary>
 		public async Task<UserViewModel> GetUserAsync(string id)
 		{
 			var user=await _userManager.FindByIdAsync(id);
@@ -127,7 +139,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Пользователя с id={id} не удалось получить из БД");
 		}
-
+		/// <summary>
+		/// Метод для логирования пользователей
+		/// </summary>
 		public async Task<SignInResult> Login(LoginViewModel model)
 		{
 			var user = await _userManager.FindByEmailAsync(model.Email);
@@ -143,7 +157,9 @@ namespace TravelSite.Services
 			}
 			return SignInResult.Failed;
 		}
-
+		/// <summary>
+		/// Метод для создания модели регистрации пользователя
+		/// </summary>
 		public RegisterViewModel Register()
 		{
 			var model=new RegisterViewModel();
@@ -154,7 +170,9 @@ namespace TravelSite.Services
 			}
 			return model;
 		}
-
+		/// <summary>
+		/// Метод для регистрации пользователя
+		/// </summary>
 		public async Task<IdentityResult> Register(RegisterViewModel model)
 		{
 			if (!model.EmailKey.IsNullOrEmpty())
@@ -171,7 +189,9 @@ namespace TravelSite.Services
 			}
 			return result;
 		}
-
+		/// <summary>
+		/// Метод для регистрации для обновления данных пользователя
+		/// </summary>
 		public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model)
 		{
 			var user=await _userManager.FindByIdAsync(model.UserId);
@@ -195,6 +215,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Пользователя с id={model.UserId} не удалось получить из БД");
 		}
+		/// <summary>
+		/// Метод для создания дефолтного админа
+		/// </summary>
 		public async Task CreateAdmin()
 		{
 			var newUser = new User
@@ -213,11 +236,17 @@ namespace TravelSite.Services
 					await _userManager.AddToRoleAsync(newUser, "Admin");
 			}
 		}
+		/// <summary>
+		/// Метод для добавления ссылок на мессенджеры
+		/// </summary>
 		public async Task AddRefs(RefsViewModel model)
 		{
 			await _fileService.SaveFileInFolder("wwwroot/etc", model.Url1, ".txt", "telegramRef");
 			await _fileService.SaveFileInFolder("wwwroot/etc", model.Url2, ".txt", "whatsupRef");
 		}
+		/// <summary>
+		/// Метод для создания модели содержащей ссылки на мессенджеры
+		/// </summary>
 		public async Task<RefsViewModel> AddRefs()
 		{
 			var model=new RefsViewModel();

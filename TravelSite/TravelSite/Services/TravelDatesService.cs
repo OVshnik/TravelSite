@@ -17,6 +17,9 @@ namespace TravelSite.Services
 			_travelDatesRepository = travelDatesRepository;
 			_travelRepository = travelRepository;
 		}
+		/// <summary>
+		/// Метод для создания модели, для последующего добавления возможных дат туров
+		/// </summary>
 		public async Task<CreateTravelDatesViewModel> AddTravelDates(Guid id)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(id);
@@ -27,6 +30,9 @@ namespace TravelSite.Services
 			};
 			return model;
 		}
+		/// <summary>
+		/// Метод для добавления возможных дат туров
+		/// </summary>
 		public async Task AddTravelDates(CreateTravelDatesViewModel model)
 		{
 			model.DaysCount = CalculateAmountDays(model.To, model.From);
@@ -46,7 +52,9 @@ namespace TravelSite.Services
 				await _travelRepository.UpdateTravelAsync(travel);
 			}
 		}
-
+		/// <summary>
+		/// Метод для редактирования конкретной даты тура по id
+		/// </summary>
 		public async Task<EditTravelDatesViewModel> EditTravelDates(Guid id)
 		{
 			var travelDates = await _travelDatesRepository.GetTravelDatesByIdAsync(id);
@@ -59,7 +67,9 @@ namespace TravelSite.Services
 
 			throw new Exception($"Даты с id '{id}' не найдены в БД");
 		}
-
+		/// <summary>
+		/// Метод для добавления обновления данных дат туров
+		/// </summary>
 		public async Task UpdateTravelDates(EditTravelDatesViewModel model)
 		{
 			var travelDates = await _travelDatesRepository.GetTravelDatesByIdAsync(model.Id);
@@ -72,6 +82,9 @@ namespace TravelSite.Services
 				await _travelDatesRepository.UpdateTravelDatesAsync(travelDates);
 			}
 		}
+		/// <summary>
+		/// Метод для получения всех дат, всех туров
+		/// </summary>
 		public async Task<List<TravelDatesViewModel>> GetAllTravelDates()
 		{
 			var travelDatesList = new List<TravelDatesViewModel>();
@@ -89,7 +102,9 @@ namespace TravelSite.Services
 			}
 			return travelDatesList;
 		}
-
+		/// <summary>
+		/// Метод для получения конкретных дат тура по id
+		/// </summary>
 		public async Task<TravelDatesViewModel> GetTravelDatesById(Guid id)
 		{
 			var travelDates = await _travelDatesRepository.GetTravelDatesByIdAsync(id);
@@ -102,7 +117,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Даты с id '{id}' не найдены в БД");
 		}
-
+		/// <summary>
+		/// Метод для удаления конкретных дат тура по id
+		/// </summary>
 		public async Task RemoveTravelDates(Guid id)
 		{
 			var travelDates = await _travelDatesRepository.GetTravelDatesByIdAsync(id);
@@ -111,6 +128,9 @@ namespace TravelSite.Services
 				await _travelDatesRepository.DeleteTravelDatesAsync(id);
 			}
 		}
+		/// <summary>
+		/// Метод для расчет общего количества дней по датам тура
+		/// </summary>
 		private int CalculateAmountDays(DateOnly to, DateOnly from)
 		{
 			return Math.Abs(from.DayNumber - to.DayNumber);

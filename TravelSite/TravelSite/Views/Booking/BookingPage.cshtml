@@ -142,7 +142,7 @@
 					data: "id=" + Id,
 					async: true,
 					success: function (result) {
-						console.log('work');
+						console.log('workCancel');
 						let status = document.getElementById('status');
 						status.innerHTML = result;
 						if (result != null) {
@@ -207,7 +207,7 @@
 					async: true,
 					success: function (result) {
 						let status = document.getElementById('status');
-						console.log('work');
+						console.log('workConfirm');
 						status.innerHTML = result;
 						if (result != null) {
 							if (status.classList.contains('text-bg-warning')) {

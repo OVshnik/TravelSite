@@ -15,19 +15,24 @@ namespace TravelSite.Controllers
 		private readonly SignInManager<User> _signInManager;
 		private readonly IAccountService _accountService;
 		private readonly ILogger<AccountController> _logger;
-
 		public AccountController(SignInManager<User> signInManager, IAccountService accountService, ILogger<AccountController> logger)
 		{
 			_signInManager = signInManager;
 			_accountService = accountService;
 			_logger = logger;
 		}
+		/// <summary>
+		/// [Get] Метод, логирования пользователя
+		/// </summary>
 		[Route("Login")]
 		[HttpGet]
 		public IActionResult Login()
 		{
 			return View("Login");
 		}
+		/// <summary>
+		/// [Post] Метод, выход пользователя
+		/// </summary>
 		[Route("Logout")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -36,11 +41,17 @@ namespace TravelSite.Controllers
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
+		/// <summary>
+		/// [Get] Метод, логирования пользователя
+		/// </summary>
 		[HttpGet]
 		public IActionResult Login(string returnUrl)
 		{
 			return View(new LoginViewModel { ReturnUrl = returnUrl });
 		}
+		/// <summary>
+		/// [Post] Метод, логирования пользователя
+		/// </summary>
 		[Route("Login")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -62,6 +73,9 @@ namespace TravelSite.Controllers
 			}
 			return RedirectToAction("Login",new {});
 		}
+		/// <summary>
+		/// [Get] Метод, регистрации пользователя
+		/// </summary>
 		[Route("Register")]
 		[HttpGet]
 		public IActionResult Register()
@@ -69,6 +83,9 @@ namespace TravelSite.Controllers
 			var model = _accountService.Register();
 			return View("RegisterPage", model);
 		}
+		/// <summary>
+		/// [Post] Метод, регистрации пользователя
+		/// </summary>
 		[Route("Register")]
 		[HttpPost]
 		public async Task<IActionResult> Register(RegisterViewModel model)
@@ -92,6 +109,9 @@ namespace TravelSite.Controllers
 				return View("RegisterPage");
 			}
 		}
+		/// <summary>
+		/// [Get] Метод, для входа на страницу пользователя
+		/// </summary>
 		[Authorize]
 		[Route("MyPage")]
 		[HttpGet]
@@ -101,7 +121,9 @@ namespace TravelSite.Controllers
 
 			return View("UserPage", model);
 		}
-
+	    /// <summary>
+		/// [Get] Метод, для входа на страницу пользователя по его id
+		/// </summary>
 		[Authorize]
 		[Route("UserPage")]
 		[HttpGet]
@@ -111,6 +133,9 @@ namespace TravelSite.Controllers
 
 			return View("UserPage", model);
 		}
+		/// <summary>
+		/// [Get] Метод, для перехода на страницу с отображением всех пользователей
+		/// </summary>
 		[Authorize]
 		[Route("UserList")]
 		[HttpGet]
@@ -119,7 +144,9 @@ namespace TravelSite.Controllers
 			var users = await _accountService.GetAllUsersAsync();
 			return View("UserList", users);
 		}
-
+		/// <summary>
+		/// [Get] Метод, для редактирования страницы пользователя
+		/// </summary>
 		[Route("EditUser")]
 		[Authorize]
 		[HttpGet]
@@ -131,6 +158,9 @@ namespace TravelSite.Controllers
 
 			return View("EditUser", model);
 		}
+		/// <summary>
+		/// [Post] Метод, для редактирования страницы пользователя с правами администратора
+		/// </summary>
 		[Route("AdminEditUser")]
 		[Authorize("Admin")]
 		[HttpPost]
@@ -140,7 +170,9 @@ namespace TravelSite.Controllers
 
 			return View("EditUser", model);
 		}
-
+		/// <summary>
+		/// [Post] Метод, для обновления данных пользователя
+		/// </summary>
 		[Route("UpdateUser")]
 		[Authorize]
 		[HttpPost]
@@ -175,6 +207,9 @@ namespace TravelSite.Controllers
 				return RedirectToAction("EditUser");
 			}
 		}
+		/// <summary>
+		/// [Post] Метод, для удаления пользователя
+		/// </summary>
 		[Authorize("Admin")]
 		[Route("DeleteUser")]
 		[HttpPost]
@@ -186,6 +221,9 @@ namespace TravelSite.Controllers
 			_logger.LogDebug($"Пользователь {user.User.Email} удален", user.User.Email);
 			return RedirectToAction("GetAllUsers");
 		}
+		/// <summary>
+		/// [Get] Метод, для входа на страницу с настройками для администратора
+		/// </summary>
 		[Authorize("Admin")]
 		[Route("AdminSettings")]
 		[HttpGet]
@@ -193,6 +231,9 @@ namespace TravelSite.Controllers
 		{
 			return View(await _accountService.AddRefs());
 		}
+		/// <summary>
+		/// [Post] Метод, для добавления ссылок на мессенджеры
+		/// </summary>
 		[Authorize("Admin")]
 		[Route("AddReferences")]
 		[HttpPost]
@@ -201,6 +242,9 @@ namespace TravelSite.Controllers
 			_accountService.AddRefs(model);
 			return RedirectToAction("AdminSettings");
 		}
+		/// <summary>
+		/// [Get] Метод, для получения ссылок на мессенджеры
+		/// </summary>
 		[HttpGet]
 		public async Task<IActionResult> GetUrls()
 		{

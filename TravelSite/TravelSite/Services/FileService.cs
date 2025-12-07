@@ -6,6 +6,9 @@ namespace TravelSite.Services
 {
 	public class FileService : IFileService
 	{
+		/// <summary>
+		/// Метод для сохранения файла в папку по заданному пути
+		/// </summary>
 		public async Task<string> SaveFileInFolder(IFormFile formFile, string path, string subFileName)
 		{
 			var extension = Path.GetExtension(formFile.FileName).ToLowerInvariant();
@@ -23,6 +26,9 @@ namespace TravelSite.Services
 
 			return fileName;
 		}
+		/// <summary>
+		/// Метод для сохранения текстового файла в папку по заданному пути
+		/// </summary>
 		public async Task SaveFileInFolder(string path, string content, string extension, string fileName)
 		{
 
@@ -40,6 +46,9 @@ namespace TravelSite.Services
 				await writer.WriteAsync(content);
 			}
 		}
+		/// <summary>
+		/// Метод для чтения файла из папки по заданному пути
+		/// </summary>
 		public async Task<string> ReadFileInFolder(string path, string extension, string fileName)
 		{
 			fileName = fileName + extension;
@@ -55,6 +64,9 @@ namespace TravelSite.Services
 				return String.Empty;
 			}
 		}
+		/// <summary>
+		/// Метод для удаления файла из папки по заданному пути
+		/// </summary>
 		public void DeleteFileInFolder(string path,string fileName)
 		{
 			var filePath = Path.Combine(path, fileName);

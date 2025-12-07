@@ -8,13 +8,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using TravelSite;
 using GleamTech.AspNet.Core;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using TravelSite.Notifications;
-using Newtonsoft.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +75,14 @@ builder.Services.AddMvc()
   {
 	  o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
   });
+
+builder.Logging
+	.ClearProviders()
+	.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace)
+	.AddConsole()
+	.AddNLogWeb("nlog");
+
+builder.Host.UseNLog();
 
 var app = builder.Build();
 

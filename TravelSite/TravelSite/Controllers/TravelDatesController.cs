@@ -9,10 +9,15 @@ namespace TravelSite.Controllers
 	public class TravelDatesController : Controller
 	{
 		private readonly ITravelDatesService _travelDatesService;
-		public TravelDatesController(ITravelDatesService travelDatesService)
+		private readonly ILogger<TravelDatesController> _logger;
+		public TravelDatesController(ITravelDatesService travelDatesService, ILogger<TravelDatesController> logger)
 		{
 			_travelDatesService = travelDatesService;
+			_logger = logger;
 		}
+		/// <summary>
+		/// [Post] Метод, для добавления дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpPost]
 		[Route("AddTravelDates")]
@@ -21,6 +26,9 @@ namespace TravelSite.Controllers
 			var model = await _travelDatesService.AddTravelDates(id);
 			return View(model);
 		}
+		/// <summary>
+		/// [Post] Метод, для добавления дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpPost]
 		[Route("AddTravelDatesInDB")]
@@ -29,10 +37,14 @@ namespace TravelSite.Controllers
 			if (ModelState.IsValid)
 			{
 				await _travelDatesService.AddTravelDates(model);
+				_logger.LogInformation($"Добавлены даты для тура с id={model.Travel.Id}",model.Id);
 				return RedirectToAction("Index", "Home");
 			}
 			return View("AddTravelDates",model);
 		}
+		/// <summary>
+		/// [Get] Метод, для получения определенных дат тура
+		/// </summary>
 		[HttpGet]
 		[Route("GetTravelDates")]
 		public async Task<IActionResult> GetTravelDates(Guid id)
@@ -40,6 +52,9 @@ namespace TravelSite.Controllers
 			var model = await _travelDatesService.GetTravelDatesById(id);
 			return View("TravelDatesPage",model);
 		}
+		/// <summary>
+		/// [Get] Метод, для получения всех дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpGet]
 		[Route("GetAllTravelDates")]
@@ -48,6 +63,9 @@ namespace TravelSite.Controllers
 			var model = await _travelDatesService.GetAllTravelDates();
 			return View("TravelDatesList",model);
 		}
+		/// <summary>
+		/// [Post] Метод, для редактирования дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpPost]
 		[Route("EditTravelDates")]
@@ -56,6 +74,9 @@ namespace TravelSite.Controllers
 			var model = await _travelDatesService.EditTravelDates(id);
 			return View(model);
 		}
+		/// <summary>
+		/// [Post] Метод, для обновления дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpPost]
 		[Route("UpdateTravelDates")]
@@ -64,16 +85,22 @@ namespace TravelSite.Controllers
 			if (ModelState.IsValid)
 			{
 				await _travelDatesService.UpdateTravelDates(model);
+				_logger.LogInformation($"Изменены даты для тура с id={model?.Travel?.Id}", model?.Id);
 				return RedirectToAction("GetAllTravelDates");
 			}
 			return RedirectToAction("EditTravelDates");
 		}
+		/// <summary>
+		/// [Post] Метод, для удаления дат тура
+		/// </summary>
 		[Authorize("Admin")]
 		[HttpPost]
 		[Route("DeleteTravelDates")]
 		public async Task<IActionResult> DeleteTravelDates(Guid id)
 		{
+			var trDates=await _travelDatesService.GetTravelDatesById(id);
 			await _travelDatesService.RemoveTravelDates(id);
+			_logger.LogInformation($"Удалены даты для тура с id={trDates?.Travel?.Id}", trDates?.Id);
 			return RedirectToAction("GetAllTravelDates");
 		}
 	}

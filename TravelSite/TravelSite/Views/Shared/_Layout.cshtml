@@ -58,7 +58,7 @@
 						<div style="position:relative">
 							<a class="text-decoration-none;color:darkgray;" method=get asp-area="" asp-controller="Notification" asp-route-id="" asp-action="GetNotifications">
 								<img style="align-content:center; border-radius:5px; background-image;position:relative;z-index:1" src="~/Notify.png" width="60%" height="auto" />
-								<span id="not" class="badge text-bg-danger p-1 m-1" style="border-radius:50%;position:absolute; top: -10px; right: 5px;"></span>
+								<span id="not" class="bg-danger badge p-1 m-1" style="border-radius:50%;position:absolute; top: -10px; right:0px;width:20px;height:20px"></span>
 							</a>
 						</div>
 						<ul class="navbar-nav align-items-center">
@@ -226,6 +226,9 @@
 					let elem = document.getElementById('not');
 					if (nots.length > 0) {
 						elem.innerHTML = nots.length.toString();
+							if(notslength > 19) {
+							elem.style.fontSizeAdjust = '0.45';
+						}
 					}
 					else {
 						elem.hidden = true;

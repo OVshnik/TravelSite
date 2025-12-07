@@ -19,7 +19,7 @@
 			@foreach (var group in Model.GroupBy(c => c.User?.Email).ToList())
 			{
 				<div class="card mb-1 w-75 m-auto">
-					<label class="fw-bold fs-6">Бронирования @group.Key</label>
+					<label class="fw-bold fs-6">Бронирования @group.Key :</label>
 					@foreach (var booking in group)
 					{
 						<div class="mb-1">

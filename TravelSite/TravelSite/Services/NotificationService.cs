@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol.Plugins;
 using TravelSite.Data.Models;
 using TravelSite.Data.Repository;
@@ -27,6 +28,9 @@ namespace TravelSite.Services
 			_bookingRepository = bookingRepository;
 			_emailService = emailService;
 		}
+		/// <summary>
+		/// Метод для создания уведомления о созданном бронировании
+		/// </summary>
 		public async Task CreateBookingNotification(Guid bookId, string userId, string bookNum, string linkedUrl)
 		{
 			var admins = await _userManager.GetUsersInRoleAsync("Admin");
@@ -36,7 +40,7 @@ namespace TravelSite.Services
 			var message = $"Бронирование №{bookNum} создано";
 
 			var booking = await _bookingRepository.GetBookingByIdAsync(bookId);
-			if (booking != null&&admin!=null)
+			if (booking != null && admin != null)
 			{
 				var notification = new BookingNotification
 				{
@@ -48,11 +52,18 @@ namespace TravelSite.Services
 				await _notificationRepository.CreateNotificationAsync(notification);
 				message = message + $"\n Перейти {linkedUrl}";
 				var sender = await _userManager.FindByIdAsync(userId);
-				var emailPass= HT.Core.CryptExtensions.Decrypt(admin.EmailKey);
 
-				await _emailService.SendEmailAsync(admin.Email, admin.Email, emailPass, message, bookNum);
+				var emailPass = HT.Core.CryptExtensions.Decrypt(admin.EmailKey);
+
+				if (!string.IsNullOrEmpty(emailPass))
+				{
+					await _emailService.SendEmailAsync(admin.Email, admin.Email, emailPass, message, bookNum);
+				}
 			}
 		}
+		/// <summary>
+		/// Метод для создания уведомления о подтверждении бронирования
+		/// </summary>
 		public async Task ConfirmBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
@@ -70,18 +81,23 @@ namespace TravelSite.Services
 					BookingId = booking.Id
 				};
 				await _notificationRepository.CreateNotificationAsync(notification);
-				message = message+$"\n Перейти {linkedUrl}";
+				message = message + $"\n Перейти {linkedUrl}";
 				var recipient = await _userManager.FindByIdAsync(booking.UserId);
 
 				var sender = await _userManager.FindByIdAsync(senderId);
 
 				var emailPass = HT.Core.CryptExtensions.Decrypt(sender?.EmailKey);
-
-				await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
+				if (!string.IsNullOrEmpty(emailPass))
+				{
+					await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
+				}
 			}
 			else
 				throw new Exception($"Бронирование с id'{id}'не найдено");
 		}
+		/// <summary>
+		/// Метод для создания уведомления об отмене бронирования
+		/// </summary>
 		public async Task CancelBookingNotification(Guid id, string senderId, string bookNum, string linkedUrl)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
@@ -105,11 +121,17 @@ namespace TravelSite.Services
 
 				var emailPass = HT.Core.CryptExtensions.Decrypt(sender?.EmailKey);
 
-				await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
+				if (!string.IsNullOrEmpty(emailPass))
+				{
+					await _emailService.SendEmailAsync(recipient.Email, sender.Email, emailPass, message, bookNum);
+				}
 			}
 			else
 				throw new Exception($"Бронирование с id'{id}'не найдено");
 		}
+		/// <summary>
+		/// Метод для получения всех уведомлений
+		/// </summary>
 		public async Task<List<NotificationViewModel>> GetAllNotificationAsync()
 		{
 			var nots = await _notificationRepository.GetAllNotificationsAsync();
@@ -123,6 +145,9 @@ namespace TravelSite.Services
 			}
 			return notList;
 		}
+		/// <summary>
+		/// Метод для получения всех уведомлений у конкретного пользователя по его id
+		/// </summary>
 		public async Task<List<NotificationViewModel>> GetAllNotificationsByUserAsync(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
@@ -138,6 +163,9 @@ namespace TravelSite.Services
 			}
 			return notList;
 		}
+		/// <summary>
+		/// Метод для получения уведомления по его id
+		/// </summary>
 		public async Task<NotificationViewModel> GetNotificationAsync(Guid id)
 		{
 			var notification = await _notificationRepository.GetNotificationByIdAsync(id);
@@ -148,12 +176,16 @@ namespace TravelSite.Services
 			}
 			throw new NotImplementedException();
 		}
-
+		/// <summary>
+		/// Метод для удаления уведомления по его id
+		/// </summary>
 		public async Task RemoveNotificationAsync(Guid id)
 		{
 			await _notificationRepository.DeleteNotificationAsync(id);
 		}
-
+		/// <summary>
+		/// Метод для удаления всех уведомлений у конкретного пользователя по его id
+		/// </summary>
 		public async Task RemoveAllNotificationByUserAsync(string userId)
 		{
 			var nots = await _notificationRepository.GetAllNotificationsAsync();
@@ -166,6 +198,9 @@ namespace TravelSite.Services
 				}
 			}
 		}
+		/// <summary>
+		/// Метод для отметки уведомления как прочитанного
+		/// </summary>
 		public async Task MarkNotificationAsDeliveredAsync(Guid id)
 		{
 			var not = await _notificationRepository.GetNotificationByIdAsync(id);

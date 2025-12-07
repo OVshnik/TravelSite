@@ -1,0 +1,60 @@
+2025-12-05 17:43:55.5471 | TravelSite.Controllers.TravelController.AddTravel | INFO | Тур с id=fb3d0870-99ac-41f3-aef0-ec5c7e55943e добавлен 
+
+2025-12-05 18:09:58.5460 | TravelSite.Controllers.BookingController.AddBooking | INFO | Бронирование номер СВАНЕТИ-62597-0003 создано, пользователем с id=b278a661-a3b1-459b-8318-56806333043d 
+
+2025-12-05 18:10:23.5182 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином test@mail.ru вошел в систему 
+
+2025-12-05 18:10:33.3127 | TravelSite.Controllers.BookingController.AddBooking | INFO | Бронирование номер СВАНЕТИ-49386-0004 создано, пользователем с id=85ff3362-0480-4044-853a-e40a9bcec2db 
+
+2025-12-05 18:10:42.9503 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином admin@gmail.com вошел в систему 
+
+2025-12-05 18:11:06.2725 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином sp.gro.33@gmail.com вошел в систему 
+
+2025-12-05 18:26:29.3687 | Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition.Log | WARN | Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'. 
+
+2025-12-05 18:26:41.4559 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-49386-0004 изменен на 'Confirmed' 
+
+2025-12-05 18:42:30.3124 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином test@mail.ru вошел в систему 
+
+2025-12-05 18:42:43.7368 | Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition.Log | WARN | Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'. 
+
+2025-12-05 18:42:50.8118 | TravelSite.Controllers.BookingController.AddBooking | INFO | Бронирование номер СВАНЕТИ-60126-0005 создано, пользователем с id=85ff3362-0480-4044-853a-e40a9bcec2db 
+
+2025-12-05 18:43:03.3738 | TravelSite.Controllers.BookingController.AddBooking | INFO | Бронирование номер СВАНЕТИ-11240-0006 создано, пользователем с id=85ff3362-0480-4044-853a-e40a9bcec2db 
+
+2025-12-05 18:43:38.9873 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином admin@gmail.com вошел в систему 
+
+2025-12-05 18:43:54.1178 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином sp.gro.33@gmail.com вошел в систему 
+
+2025-12-05 18:44:13.9141 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-11240-0006 изменен на 'Confirmed' 
+
+2025-12-05 18:44:25.4297 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-49386-0004 изменен на 'Canceled' 
+
+2025-12-05 18:44:36.4952 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-11240-0006 изменен на 'Canceled' 
+
+2025-12-05 18:44:46.0174 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Confirmed' 
+
+2025-12-05 18:44:50.6103 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Canceled' 
+
+2025-12-05 18:44:53.0302 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Confirmed' 
+
+2025-12-05 18:44:55.1663 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Canceled' 
+
+2025-12-05 18:44:58.1372 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Confirmed' 
+
+2025-12-05 18:45:01.2066 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Canceled' 
+
+2025-12-05 18:45:04.0960 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Confirmed' 
+
+2025-12-05 18:45:07.0223 | TravelSite.Controllers.BookingController.CancelBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Canceled' 
+
+2025-12-05 18:45:10.8423 | TravelSite.Controllers.BookingController.ConfirmBooking | INFO | Статус бронирования СВАНЕТИ-60126-0005 изменен на 'Confirmed' 
+
+2025-12-05 18:45:17.0003 | TravelSite.Controllers.AccountController.Login | INFO | Пользователь с логином test@mail.ru вошел в систему 
+
+2025-12-05 22:12:21.4497 | Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition.Log | WARN | Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'. 
+
+2025-12-05 22:25:32.0235 | Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition.Log | WARN | Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'. 
+
+2025-12-05 22:32:06.4921 | Microsoft.EntityFrameworkCore.Diagnostics.EventDefinition.Log | WARN | Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'. 
+

@@ -112,3 +112,4 @@ dkms.conf
 /TravelSite/TravelSite/bin/Release/net8.0/appsettings.Development.json
 /TravelSite/TravelSite/bin/Debug/net8.0/appsettings.Development.json
 /TravelSite/TravelSite/appsettings.Development.json
+/TravelSite/TravelSite/wwwroot/uploads/photo

@@ -38,6 +38,9 @@ namespace TravelSite.Services
 			_travelDatesRepository = travelDatesRepository;
 			_notificationService = notificationService;
 		}
+		/// <summary>
+		/// Метод для создания модели создания бронирования
+		/// </summary>
 		public async Task<CreateBookingViewModel> AddBookingAsync(Guid id, ClaimsPrincipal claims)
 		{
 			var travel = await _travelRepository.GetTravelByIdAsync(id);
@@ -67,7 +70,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Тур с id '{id}' не найден, либо пользователь с именем '{claims?.Identity?.Name}' не существует");
 		}
-
+		/// <summary>
+		/// Метод для добавления бронирования
+		/// </summary>
 		public async Task<Guid> AddBookingAsync(CreateBookingViewModel model)
 		{
 			var dates = model.TravelDates?.FirstOrDefault(x => x.isChecked == true);
@@ -111,6 +116,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"тур с Id '{model.Travel?.Id}' не найден");
 		}
+		/// <summary>
+		/// Метод для проверки дат бронирования
+		/// </summary>
 		public async Task<bool> CheckDates(string userId, Guid travelId, Guid datesId)
 		{
 			var bookings = await _bookingRepository.GetAllBookingsAsync();
@@ -127,6 +135,9 @@ namespace TravelSite.Services
 			}
 			return true;
 		}
+		/// <summary>
+		/// Метод для удаления бронирования
+		/// </summary>
 		public async Task RemoveBookingAsync(Guid id)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
@@ -135,7 +146,9 @@ namespace TravelSite.Services
 				await _bookingRepository.DeleteBookingAsync(id);
 			}
 		}
-
+		/// <summary>
+		/// Метод для получения модели бронирования по id
+		/// </summary>
 		public async Task<BookingViewModel> GetBookingAsync(Guid id)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
@@ -153,7 +166,9 @@ namespace TravelSite.Services
 			}
 			throw new Exception($"Бронирование с id '{id}' не найдено");
 		}
-
+		/// <summary>
+		/// Метод для получения моделей всех бронирований
+		/// </summary>
 		public async Task<List<BookingViewModel>> GetAllBookingAsync()
 		{
 			var bookings = await _bookingRepository.GetAllBookingsAsync();
@@ -168,7 +183,9 @@ namespace TravelSite.Services
 			}
 			return listBookings;
 		}
-
+		/// <summary>
+		/// Метод создающий модель бронирования, для последующего редактирования
+		/// </summary>
 		public async Task<EditBookingViewModel> EditBookingAsync(Guid id)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(id);
@@ -182,6 +199,9 @@ namespace TravelSite.Services
 			throw new Exception($"Бронирование с id'{id}'не найдено");
 
 		}
+		/// <summary>
+		/// Метод для обновления данных бронирования
+		/// </summary>
 		public async Task UpdateBookingAsync(EditBookingViewModel model)
 		{
 			var booking = await _bookingRepository.GetBookingByIdAsync(model.Id);
@@ -192,6 +212,9 @@ namespace TravelSite.Services
 				await _bookingRepository.UpdateBookingAsync(booking);
 			}
 		}
+		/// <summary>
+		/// Метод для генерации номера бронирования
+		/// </summary>
 		public async Task<string> GenerateBookingNumber(string trName)
 		{
 			if (!string.IsNullOrEmpty(trName))
