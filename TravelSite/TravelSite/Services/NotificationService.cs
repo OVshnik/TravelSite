@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol.Plugins;
 using TravelSite.Data.Models;
 using TravelSite.Data.Repository;
 using TravelSite.Models.Notification;

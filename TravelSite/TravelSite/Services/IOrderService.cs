@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TravelSite.Models.Orders;
+﻿using TravelSite.Models.Orders;
 
 namespace TravelSite.Services
 {

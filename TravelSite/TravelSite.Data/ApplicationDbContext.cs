@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using TravelSite.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Reflection.Emit;
 
 namespace TravelSite.Data
 {

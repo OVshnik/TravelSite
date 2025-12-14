@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TravelSite.Data.Models;
 using TravelSite.Models.Roles;
-using TravelSite.Services;
 
 namespace TravelSite.Services;
 

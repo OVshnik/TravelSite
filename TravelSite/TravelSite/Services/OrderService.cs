@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.IdentityModel.Tokens;
 using TravelSite.Data.Models;
 using TravelSite.Data.Repository;
-using TravelSite.Models.Bookings;
 using TravelSite.Models.Orders;
 using TravelSite.Models.Travels;
 

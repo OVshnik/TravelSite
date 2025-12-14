@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using System.Diagnostics;
-using System.Net;
 using System.Security.Claims;
-using System.Text;
 using TravelSite.Data.Models;
 using TravelSite.Data.Repository;
-using TravelSite.Models.Account;
 using TravelSite.Models.Bookings;
 using TravelSite.Models.TravelDates;
 using TravelSite.Models.Travels;
-using TravelSite.Notifications;
 
 namespace TravelSite.Services
 {

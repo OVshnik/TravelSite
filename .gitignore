@@ -113,3 +113,7 @@ dkms.conf
 /TravelSite/TravelSite/bin/Debug/net8.0/appsettings.Development.json
 /TravelSite/TravelSite/appsettings.Development.json
 /TravelSite/TravelSite/wwwroot/uploads/photo
+/TravelSite/TravelSite/bin/Debug/net8.0/logs/errors
+/TravelSite/TravelSite/bin/Debug/net8.0/logs/main
+/TravelSite/TravelSite/logs/logs.txt
+/TravelSite/TravelSite/Properties/launchSettings.json

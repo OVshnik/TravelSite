@@ -3,15 +3,8 @@ using TravelSite.Data.Models;
 using TravelSite.Data.Repository;
 using TravelSite.Models.Travels;
 using TravelSite.Extensions;
-using Microsoft.CodeAnalysis.CSharp;
 using TravelSite.Models.TravelPhoto;
-using System.IO;
-using Microsoft.CodeAnalysis.FlowAnalysis;
-using Microsoft.IdentityModel.Tokens;
-using static GleamTech.ImageUltimate.ExifTag;
 using TravelSite.Models.TravelVideo;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TravelSite.Services
 {
@@ -272,6 +265,7 @@ namespace TravelSite.Services
 				t.Photo = "/uploads/photo/"+t.Photo;
 				return t;
 			}
+			else
 			throw new Exception(@$"""Тур"" с id {id} не найден");
 		}
 		/// <summary>

@@ -1,8 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using TravelSite.Data.Models;
-
-namespace TravelSite.Services
+﻿namespace TravelSite.Services
 {
 	public class FileService : IFileService
 	{

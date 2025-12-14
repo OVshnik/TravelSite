@@ -1,10 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using TravelSite.Data.Models;
-using TravelSite.Data.Repository;
 using TravelSite.Models.Travels;
 using TravelSite.Services;
 

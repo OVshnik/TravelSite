@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TravelSite.Data.Models;
 using TravelSite.Models.Bookings;
-using TravelSite.Models.TravelDates;
 using TravelSite.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelSite.Controllers
 {

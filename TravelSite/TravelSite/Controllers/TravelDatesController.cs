@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelSite.Data.Repository;
 using TravelSite.Models.TravelDates;
 using TravelSite.Services;
 

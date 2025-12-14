@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using TravelSite.Models.Bookings;
-using TravelSite.Models.Notification;
+﻿using TravelSite.Models.Notification;
 
 namespace TravelSite.Services
 {

@@ -1,5 +1,4 @@
-﻿using TravelSite.Data.Models;
-using TravelSite.Models.TravelDates;
+﻿using TravelSite.Models.TravelDates;
 
 namespace TravelSite.Services
 {
